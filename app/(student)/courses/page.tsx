@@ -78,7 +78,7 @@ export default async function CoursesPage() {
                     />
                   </div>
                 ) : (
-                  <div className="aspect-video w-full bg-gradient-to-br from-primary/20 to-purple-400/20 rounded-t-lg flex items-center justify-center">
+                  <div className="aspect-video w-full bg-gradient-to-br from-primary/15 to-amber-100/40 rounded-t-lg flex items-center justify-center">
                     <GraduationCap className="w-12 h-12 text-primary/60" />
                   </div>
                 )}

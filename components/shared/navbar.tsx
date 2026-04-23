@@ -33,14 +33,16 @@ export function Navbar({ userName, userEmail, userAvatar, unreadCount }: NavbarP
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 border-b border-border/60 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
       <div className="container flex h-16 items-center justify-between px-4">
-        <div className="flex items-center gap-8">
-          <Link href="/dashboard" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-              <BookOpen className="w-5 h-5 text-white" />
+        <div className="flex items-center gap-10">
+          <Link href="/dashboard" className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-md bg-primary flex items-center justify-center">
+              <BookOpen className="w-4 h-4 text-primary-foreground" />
             </div>
-            <span className="font-bold text-lg text-primary">PICKWISE</span>
+            <span className="font-bold text-base text-primary uppercase tracking-widest" style={{ fontFamily: "var(--font-display, inherit)" }}>
+              PICKWISE
+            </span>
           </Link>
 
           <nav className="hidden md:flex items-center gap-1">
@@ -55,7 +57,7 @@ export function Navbar({ userName, userEmail, userAvatar, unreadCount }: NavbarP
                     "flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors",
                     active
                       ? "bg-primary/10 text-primary"
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                      : "text-muted-foreground hover:text-foreground hover:bg-accent"
                   )}
                 >
                   <Icon className="w-4 h-4" />
@@ -68,10 +70,10 @@ export function Navbar({ userName, userEmail, userAvatar, unreadCount }: NavbarP
 
         <div className="flex items-center gap-2">
           <Link href="/dashboard" className="relative">
-            <Button variant="ghost" size="icon">
+            <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground">
               <Bell className="w-5 h-5" />
               {unreadCount > 0 && (
-                <span className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center rounded-full bg-destructive text-destructive-foreground text-xs font-bold">
+                <span className="absolute -top-1 -right-1 h-4 w-4 flex items-center justify-center rounded-full bg-primary text-primary-foreground text-[10px] font-bold">
                   {unreadCount > 9 ? "9+" : unreadCount}
                 </span>
               )}
@@ -83,7 +85,7 @@ export function Navbar({ userName, userEmail, userAvatar, unreadCount }: NavbarP
               <Button variant="ghost" className="relative h-9 w-9 rounded-full">
                 <Avatar className="h-9 w-9">
                   <AvatarImage src={userAvatar || ""} alt={userName} />
-                  <AvatarFallback>
+                  <AvatarFallback className="bg-primary/10 text-primary text-sm font-semibold">
                     {userName.split(" ").map((n) => n[0]).join("").toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
@@ -91,8 +93,8 @@ export function Navbar({ userName, userEmail, userAvatar, unreadCount }: NavbarP
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56">
               <DropdownMenuLabel>
-                <div className="font-medium">{userName}</div>
-                <div className="text-xs text-muted-foreground">{userEmail}</div>
+                <div className="font-semibold">{userName}</div>
+                <div className="text-xs text-muted-foreground font-normal">{userEmail}</div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>

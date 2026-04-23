@@ -57,7 +57,7 @@ export default async function CourseOverviewPage({ params }: Props) {
             <img src={course.coverImageUrl} alt={course.title} className="w-full h-full object-cover" />
           </div>
         ) : (
-          <div className="aspect-video rounded-xl bg-gradient-to-br from-primary/20 to-purple-400/20 flex items-center justify-center">
+          <div className="aspect-video rounded-xl bg-gradient-to-br from-primary/15 to-amber-100/40 flex items-center justify-center">
             <GraduationCap className="w-20 h-20 text-primary/40" />
           </div>
         )}
