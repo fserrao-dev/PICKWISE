@@ -122,6 +122,7 @@ export default async function LearnPage({ params }: Props) {
         questions={lesson.questions as any}
         isCompleted={isCompleted}
         prevAttempt={prevAttempt as any}
+        hasVideo={!!videoId}
       />
 
       <div className="flex items-center justify-between pt-2">

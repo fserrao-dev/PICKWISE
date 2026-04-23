@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { createModule, deleteModule, createLesson } from "@/app/actions/courses";
+import { createModule, deleteModule, createLesson, deleteLesson, reorderModule, reorderLesson } from "@/app/actions/courses";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,7 +17,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { Plus, Trash2, ChevronDown, ChevronUp, BookOpen, FileQuestion } from "lucide-react";
+import { Plus, Trash2, ChevronDown, ChevronUp, BookOpen, FileQuestion, ArrowUp, ArrowDown } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 
 interface Lesson {
@@ -88,6 +88,27 @@ export function ModuleManager({ courseId, modules }: ModuleManagerProps) {
     }
   }
 
+  async function handleDeleteLesson(lessonId: string) {
+    if (!confirm("¿Eliminar esta lección?")) return;
+    const result = await deleteLesson(lessonId);
+    if (result.success) {
+      toast.success("Lección eliminada");
+      router.refresh();
+    }
+  }
+
+  async function handleReorderModule(moduleId: string, direction: "up" | "down") {
+    const result = await reorderModule(moduleId, courseId, direction);
+    if (result.error) toast.error(result.error);
+    else router.refresh();
+  }
+
+  async function handleReorderLesson(lessonId: string, moduleId: string, direction: "up" | "down") {
+    const result = await reorderLesson(lessonId, moduleId, courseId, direction);
+    if (result.error) toast.error(result.error);
+    else router.refresh();
+  }
+
   function toggleModule(id: string) {
     setExpandedModules((prev) => {
       const next = new Set(prev);
@@ -116,8 +137,11 @@ export function ModuleManager({ courseId, modules }: ModuleManagerProps) {
         </Card>
       ) : (
         <div className="space-y-3">
-          {modules.map((module) => {
+          {modules.map((module, mi) => {
             const expanded = expandedModules.has(module.id);
+            const isFirst = mi === 0;
+            const isLast = mi === modules.length - 1;
+
             return (
               <Card key={module.id}>
                 <CardHeader className="py-3">
@@ -136,10 +160,31 @@ export function ModuleManager({ courseId, modules }: ModuleManagerProps) {
                         {module.lessons.length} lecciones
                       </Badge>
                     </button>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1">
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="h-7 w-7"
+                        disabled={isFirst}
+                        onClick={() => handleReorderModule(module.id, "up")}
+                        title="Mover arriba"
+                      >
+                        <ArrowUp className="h-3.5 w-3.5" />
+                      </Button>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="h-7 w-7"
+                        disabled={isLast}
+                        onClick={() => handleReorderModule(module.id, "down")}
+                        title="Mover abajo"
+                      >
+                        <ArrowDown className="h-3.5 w-3.5" />
+                      </Button>
                       <Button
                         size="sm"
                         variant="outline"
+                        className="ml-1"
                         onClick={() => setAddLessonModuleId(module.id)}
                       >
                         <Plus className="w-3 h-3" />
@@ -160,28 +205,61 @@ export function ModuleManager({ courseId, modules }: ModuleManagerProps) {
                 {expanded && module.lessons.length > 0 && (
                   <CardContent className="pt-0">
                     <div className="space-y-2 pl-6 border-l-2 border-muted ml-2">
-                      {module.lessons.map((lesson) => (
-                        <div
-                          key={lesson.id}
-                          className="flex items-center justify-between gap-2 py-1"
-                        >
-                          <div className="flex items-center gap-2 min-w-0">
-                            <BookOpen className="h-4 w-4 text-muted-foreground shrink-0" />
-                            <span className="text-sm truncate">{lesson.title}</span>
-                          </div>
-                          <div className="flex items-center gap-2 shrink-0">
-                            <span className="text-xs text-muted-foreground flex items-center gap-1">
-                              <FileQuestion className="h-3 w-3" />
-                              {lesson._count.questions} P
-                            </span>
-                            <Link href={`/admin/lessons/${lesson.id}`}>
-                              <Button size="sm" variant="ghost" className="h-7 text-xs">
-                                Editar
+                      {module.lessons.map((lesson, li) => {
+                        const lessonFirst = li === 0;
+                        const lessonLast = li === module.lessons.length - 1;
+                        return (
+                          <div
+                            key={lesson.id}
+                            className="flex items-center justify-between gap-2 py-1"
+                          >
+                            <div className="flex items-center gap-2 min-w-0">
+                              <BookOpen className="h-4 w-4 text-muted-foreground shrink-0" />
+                              <span className="text-sm truncate">{lesson.title}</span>
+                            </div>
+                            <div className="flex items-center gap-1 shrink-0">
+                              <span className="text-xs text-muted-foreground flex items-center gap-1 mr-1">
+                                <FileQuestion className="h-3 w-3" />
+                                {lesson._count.questions} P
+                              </span>
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                className="h-6 w-6"
+                                disabled={lessonFirst}
+                                onClick={() => handleReorderLesson(lesson.id, module.id, "up")}
+                                title="Mover arriba"
+                              >
+                                <ArrowUp className="h-3 w-3" />
                               </Button>
-                            </Link>
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                className="h-6 w-6"
+                                disabled={lessonLast}
+                                onClick={() => handleReorderLesson(lesson.id, module.id, "down")}
+                                title="Mover abajo"
+                              >
+                                <ArrowDown className="h-3 w-3" />
+                              </Button>
+                              <Link href={`/admin/lessons/${lesson.id}`}>
+                                <Button size="sm" variant="ghost" className="h-7 text-xs">
+                                  Editar
+                                </Button>
+                              </Link>
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                className="h-7 w-7 text-destructive hover:text-destructive"
+                                onClick={() => handleDeleteLesson(lesson.id)}
+                                title="Eliminar lección"
+                              >
+                                <Trash2 className="h-3.5 w-3.5" />
+                              </Button>
+                            </div>
                           </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   </CardContent>
                 )}

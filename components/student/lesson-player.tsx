@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { CheckCircle2, XCircle, Trophy, RefreshCcw, Star } from "lucide-react";
+import { CheckCircle2, XCircle, Trophy, RefreshCcw, Star, PlayCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface Question {
@@ -40,12 +40,13 @@ interface Props {
   questions: Question[];
   isCompleted: boolean;
   prevAttempt: PrevAttempt | null;
+  hasVideo?: boolean;
 }
 
-export function LessonPlayer({ lessonId, courseId, questions, isCompleted, prevAttempt }: Props) {
+export function LessonPlayer({ lessonId, courseId, questions, isCompleted, prevAttempt, hasVideo }: Props) {
   const router = useRouter();
-  const [phase, setPhase] = useState<"idle" | "quiz" | "result">(
-    isCompleted && prevAttempt ? "result" : "idle"
+  const [phase, setPhase] = useState<"video-gate" | "idle" | "quiz" | "result">(
+    isCompleted && prevAttempt ? "result" : (hasVideo && !isCompleted ? "video-gate" : "idle")
   );
   const [answers, setAnswers] = useState<(number | null)[]>(
     new Array(questions.length).fill(null)
@@ -100,6 +101,28 @@ export function LessonPlayer({ lessonId, courseId, questions, isCompleted, prevA
     setResults(null);
     setScore(null);
     setPhase("quiz");
+  }
+
+  if (phase === "video-gate") {
+    return (
+      <Card className="bg-muted/40 border-border">
+        <CardContent className="flex flex-col items-center justify-center py-10 text-center gap-4">
+          <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center">
+            <PlayCircle className="w-7 h-7 text-primary" />
+          </div>
+          <div>
+            <h3 className="font-semibold text-lg mb-1">Mirá el video antes de tomar el quiz</h3>
+            <p className="text-sm text-muted-foreground">
+              Una vez que hayas visto el video, hacé clic en el botón para desbloquear el quiz.
+            </p>
+          </div>
+          <Button onClick={() => setPhase("idle")} size="lg" variant="outline">
+            <CheckCircle2 className="w-4 h-4" />
+            Ya vi el video, tomar quiz
+          </Button>
+        </CardContent>
+      </Card>
+    );
   }
 
   if (phase === "idle") {

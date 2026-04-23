@@ -274,3 +274,51 @@ export async function deleteQuestion(id: string, lessonId: string) {
   revalidatePath(`/admin/lessons/${lessonId}`);
   return { success: true };
 }
+
+export async function reorderModule(moduleId: string, courseId: string, direction: "up" | "down") {
+  await requireAdmin();
+
+  const module_ = await prisma.module.findUnique({ where: { id: moduleId } });
+  if (!module_) return { error: "Módulo no encontrado" };
+
+  const adjacent = await prisma.module.findFirst({
+    where: {
+      courseId,
+      order: direction === "up" ? { lt: module_.order } : { gt: module_.order },
+    },
+    orderBy: { order: direction === "up" ? "desc" : "asc" },
+  });
+  if (!adjacent) return { error: "No se puede mover en esa dirección" };
+
+  await prisma.$transaction([
+    prisma.module.update({ where: { id: moduleId }, data: { order: adjacent.order } }),
+    prisma.module.update({ where: { id: adjacent.id }, data: { order: module_.order } }),
+  ]);
+
+  revalidatePath(`/admin/courses/${courseId}`);
+  return { success: true };
+}
+
+export async function reorderLesson(lessonId: string, moduleId: string, courseId: string, direction: "up" | "down") {
+  await requireAdmin();
+
+  const lesson = await prisma.lesson.findUnique({ where: { id: lessonId } });
+  if (!lesson) return { error: "Lección no encontrada" };
+
+  const adjacent = await prisma.lesson.findFirst({
+    where: {
+      moduleId,
+      order: direction === "up" ? { lt: lesson.order } : { gt: lesson.order },
+    },
+    orderBy: { order: direction === "up" ? "desc" : "asc" },
+  });
+  if (!adjacent) return { error: "No se puede mover en esa dirección" };
+
+  await prisma.$transaction([
+    prisma.lesson.update({ where: { id: lessonId }, data: { order: adjacent.order } }),
+    prisma.lesson.update({ where: { id: adjacent.id }, data: { order: lesson.order } }),
+  ]);
+
+  revalidatePath(`/admin/courses/${courseId}`);
+  return { success: true };
+}
