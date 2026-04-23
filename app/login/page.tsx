@@ -30,9 +30,9 @@ export default function LoginPage() {
     setLoading(false);
 
     if (result?.error) {
-      toast.error("Invalid email or password");
+      toast.error("Email o contraseña incorrectos");
     } else {
-      toast.success("Welcome back!");
+      toast.success("¡Bienvenido de vuelta!");
       const res = await fetch("/api/auth/session");
       const session = await res.json();
       if (session?.user?.role === "ADMIN") {
@@ -56,24 +56,24 @@ export default function LoginPage() {
 
         <Card>
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl">Welcome back</CardTitle>
-            <CardDescription>Sign in to your account to continue learning</CardDescription>
+            <CardTitle className="text-2xl">Iniciar sesión</CardTitle>
+            <CardDescription>Ingresa a tu cuenta para continuar aprendiendo</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">Correo electrónico</Label>
                 <Input
                   id="email"
                   type="email"
-                  placeholder="you@example.com"
+                  placeholder="tu@correo.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">Contraseña</Label>
                 <Input
                   id="password"
                   type="password"
@@ -87,19 +87,19 @@ export default function LoginPage() {
                 {loading ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    Signing in...
+                    Ingresando...
                   </>
                 ) : (
-                  "Sign In"
+                  "Ingresar"
                 )}
               </Button>
             </form>
           </CardContent>
           <CardFooter className="justify-center">
             <p className="text-sm text-muted-foreground">
-              Don&apos;t have an account?{" "}
+              ¿No tenés cuenta?{" "}
               <Link href="/register" className="text-primary hover:underline font-medium">
-                Create one
+                Crear una
               </Link>
             </p>
           </CardFooter>

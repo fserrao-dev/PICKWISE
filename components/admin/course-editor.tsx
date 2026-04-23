@@ -35,7 +35,7 @@ export function CourseEditor({ course }: CourseEditorProps) {
     if (result.error) {
       toast.error(result.error);
     } else {
-      toast.success("Course updated");
+      toast.success("Curso actualizado");
       setOpen(false);
       router.refresh();
     }
@@ -45,15 +45,15 @@ export function CourseEditor({ course }: CourseEditorProps) {
     return (
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>Course Info</CardTitle>
+          <CardTitle>Información del curso</CardTitle>
           <Button variant="outline" size="sm" onClick={() => setOpen(true)}>
-            Edit Details
+            Editar datos
           </Button>
         </CardHeader>
         <CardContent>
           <p className="text-muted-foreground">{course.description}</p>
           {course.coverImageUrl && (
-            <p className="text-sm text-muted-foreground mt-2">Cover: {course.coverImageUrl}</p>
+            <p className="text-sm text-muted-foreground mt-2">Portada: {course.coverImageUrl}</p>
           )}
         </CardContent>
       </Card>
@@ -63,16 +63,16 @@ export function CourseEditor({ course }: CourseEditorProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Edit Course Details</CardTitle>
+        <CardTitle>Editar datos del curso</CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="title">Title</Label>
+            <Label htmlFor="title">Título</Label>
             <Input id="title" name="title" defaultValue={course.title} required />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
+            <Label htmlFor="description">Descripción</Label>
             <Textarea
               id="description"
               name="description"
@@ -82,7 +82,7 @@ export function CourseEditor({ course }: CourseEditorProps) {
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="coverImageUrl">Cover Image URL</Label>
+            <Label htmlFor="coverImageUrl">URL de imagen de portada</Label>
             <Input
               id="coverImageUrl"
               name="coverImageUrl"
@@ -93,10 +93,10 @@ export function CourseEditor({ course }: CourseEditorProps) {
           <div className="flex gap-3">
             <Button type="submit" disabled={loading}>
               {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-              Save Changes
+              Guardar cambios
             </Button>
             <Button type="button" variant="outline" onClick={() => setOpen(false)}>
-              Cancel
+              Cancelar
             </Button>
           </div>
         </form>

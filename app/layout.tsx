@@ -7,13 +7,13 @@ import { SessionProvider } from "@/components/shared/session-provider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "PICKWISE — Learn Smarter",
-  description: "PICKWISE is a modern eLearning platform with quizzes, certificates, and gamification.",
+  title: "PICKWISE — Aprende con inteligencia",
+  description: "PICKWISE es una plataforma de aprendizaje online con cursos, quizzes, certificados y gamificación.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="es" suppressHydrationWarning>
       <body className={`${inter.className} antialiased`}>
         <SessionProvider>
           {children}

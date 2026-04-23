@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Plus, BookOpen } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { CourseEditor } from "@/components/admin/course-editor";
 import { ModuleManager } from "@/components/admin/module-manager";
 
@@ -43,11 +43,11 @@ export default async function CourseDetailPage({ params }: Props) {
           <div className="flex items-center gap-2">
             <h1 className="text-2xl font-bold truncate">{course.title}</h1>
             <Badge variant={course.isPublished ? "success" : "secondary"}>
-              {course.isPublished ? "Published" : "Draft"}
+              {course.isPublished ? "Publicado" : "Borrador"}
             </Badge>
           </div>
           <p className="text-sm text-muted-foreground">
-            {course._count.enrollments} students enrolled
+            {course._count.enrollments} estudiantes inscriptos
           </p>
         </div>
       </div>

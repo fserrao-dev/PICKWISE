@@ -18,7 +18,7 @@ export function EnrollButton({ courseId }: { courseId: string }) {
     if (result.error) {
       toast.error(result.error);
     } else {
-      toast.success("Enrolled successfully!");
+      toast.success("¡Inscripción exitosa!");
       router.push(`/courses/${courseId}`);
       router.refresh();
     }
@@ -27,7 +27,7 @@ export function EnrollButton({ courseId }: { courseId: string }) {
   return (
     <Button onClick={handleEnroll} disabled={loading} size="sm">
       {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-      Enroll
+      Inscribirme
     </Button>
   );
 }

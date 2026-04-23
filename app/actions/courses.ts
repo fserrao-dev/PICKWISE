@@ -9,14 +9,14 @@ import { extractYoutubeId } from "@/lib/utils";
 async function requireAdmin() {
   const session = await auth();
   if (!session || session.user.role !== "ADMIN") {
-    throw new Error("Unauthorized");
+    throw new Error("No autorizado");
   }
   return session;
 }
 
 const courseSchema = z.object({
-  title: z.string().min(3, "Title must be at least 3 characters"),
-  description: z.string().min(10, "Description must be at least 10 characters"),
+  title: z.string().min(3, "El título debe tener al menos 3 caracteres"),
+  description: z.string().min(10, "La descripción debe tener al menos 10 caracteres"),
   coverImageUrl: z.string().url().optional().or(z.literal("")),
 });
 
@@ -89,7 +89,7 @@ export async function createModule(courseId: string, formData: FormData) {
   await requireAdmin();
 
   const title = formData.get("title") as string;
-  if (!title || title.length < 2) return { error: "Module title is required" };
+  if (!title || title.length < 2) return { error: "El título del módulo es obligatorio" };
 
   const lastModule = await prisma.module.findFirst({
     where: { courseId },
@@ -108,7 +108,7 @@ export async function updateModule(id: string, courseId: string, formData: FormD
   await requireAdmin();
 
   const title = formData.get("title") as string;
-  if (!title || title.length < 2) return { error: "Module title is required" };
+  if (!title || title.length < 2) return { error: "El título del módulo es obligatorio" };
 
   await prisma.module.update({ where: { id }, data: { title } });
 
@@ -124,8 +124,8 @@ export async function deleteModule(id: string, courseId: string) {
 }
 
 const lessonSchema = z.object({
-  title: z.string().min(3, "Title must be at least 3 characters"),
-  youtubeUrl: z.string().min(1, "YouTube URL is required"),
+  title: z.string().min(3, "El título debe tener al menos 3 caracteres"),
+  youtubeUrl: z.string().min(1, "La URL de YouTube es obligatoria"),
   description: z.string().optional(),
 });
 
@@ -142,10 +142,10 @@ export async function createLesson(moduleId: string, formData: FormData) {
   if (!result.success) return { error: result.error.issues[0].message };
 
   const videoId = extractYoutubeId(result.data.youtubeUrl);
-  if (!videoId) return { error: "Invalid YouTube URL" };
+  if (!videoId) return { error: "URL de YouTube inválida" };
 
   const module_ = await prisma.module.findUnique({ where: { id: moduleId } });
-  if (!module_) return { error: "Module not found" };
+  if (!module_) return { error: "Módulo no encontrado" };
 
   const lastLesson = await prisma.lesson.findFirst({
     where: { moduleId },
@@ -179,7 +179,7 @@ export async function updateLesson(id: string, formData: FormData) {
   if (!result.success) return { error: result.error.issues[0].message };
 
   const videoId = extractYoutubeId(result.data.youtubeUrl);
-  if (!videoId) return { error: "Invalid YouTube URL" };
+  if (!videoId) return { error: "URL de YouTube inválida" };
 
   await prisma.lesson.update({
     where: { id },
@@ -212,8 +212,8 @@ export async function deleteLesson(id: string) {
 }
 
 const questionSchema = z.object({
-  text: z.string().min(5, "Question text is required"),
-  options: z.array(z.string().min(1)).length(4, "Exactly 4 options required"),
+  text: z.string().min(5, "El texto de la pregunta es obligatorio"),
+  options: z.array(z.string().min(1)).length(4, "Se requieren exactamente 4 opciones"),
   correctIndex: z.number().int().min(0).max(3),
   explanation: z.string().optional(),
 });

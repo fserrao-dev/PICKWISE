@@ -56,17 +56,16 @@ export default async function DashboardPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold">Welcome back, {user?.name?.split(" ")[0]}!</h1>
-        <p className="text-muted-foreground">Continue your learning journey</p>
+        <h1 className="text-3xl font-bold">¡Bienvenido, {user?.name?.split(" ")[0]}!</h1>
+        <p className="text-muted-foreground">Continuá tu camino de aprendizaje</p>
       </div>
 
-      {/* Stats row */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {[
-          { label: "Points", value: user?.points ?? 0, icon: Star, color: "text-yellow-500" },
-          { label: "Courses", value: enriched.length, icon: BookOpen, color: "text-blue-500" },
-          { label: "Completed", value: enriched.filter((e) => e.completedAt).length, icon: CheckCircle2, color: "text-green-500" },
-          { label: "Rank", value: `#${leaderboardRank + 1}`, icon: Trophy, color: "text-purple-500" },
+          { label: "Puntos", value: user?.points ?? 0, icon: Star, color: "text-yellow-500" },
+          { label: "Cursos", value: enriched.length, icon: BookOpen, color: "text-blue-500" },
+          { label: "Completados", value: enriched.filter((e) => e.completedAt).length, icon: CheckCircle2, color: "text-green-500" },
+          { label: "Ranking", value: `#${leaderboardRank + 1}`, icon: Trophy, color: "text-purple-500" },
         ].map((stat) => {
           const Icon = stat.icon;
           return (
@@ -82,21 +81,20 @@ export default async function DashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Enrolled courses */}
         <div className="lg:col-span-2 space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold">My Courses</h2>
+            <h2 className="text-xl font-semibold">Mis cursos</h2>
             <Link href="/courses">
-              <Button variant="outline" size="sm">Browse More</Button>
+              <Button variant="outline" size="sm">Ver más</Button>
             </Link>
           </div>
           {enriched.length === 0 ? (
             <Card>
               <CardContent className="flex flex-col items-center justify-center py-12 text-center">
                 <GraduationCap className="w-12 h-12 text-muted-foreground mb-3" />
-                <p className="font-medium mb-1">No courses yet</p>
-                <p className="text-sm text-muted-foreground mb-4">Explore our catalog and start learning</p>
-                <Link href="/courses"><Button>Browse Courses</Button></Link>
+                <p className="font-medium mb-1">Aún no tenés cursos</p>
+                <p className="text-sm text-muted-foreground mb-4">Explorá nuestro catálogo y empezá a aprender</p>
+                <Link href="/courses"><Button>Ver cursos</Button></Link>
               </CardContent>
             </Card>
           ) : (
@@ -108,16 +106,16 @@ export default async function DashboardPage() {
                       <div className="flex-1 min-w-0">
                         <CardTitle className="text-base truncate">{e.course.title}</CardTitle>
                         <CardDescription className="text-xs mt-0.5">
-                          {e.completed}/{e.total} lessons completed
+                          {e.completed}/{e.total} lecciones completadas
                         </CardDescription>
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
                         {e.completedAt && (
-                          <Badge variant="success" className="text-xs">Completed</Badge>
+                          <Badge variant="success" className="text-xs">Completado</Badge>
                         )}
                         <Link href={`/courses/${e.courseId}`}>
                           <Button size="sm" variant={e.completedAt ? "outline" : "default"}>
-                            {e.completedAt ? "Review" : "Continue"}
+                            {e.completedAt ? "Revisar" : "Continuar"}
                           </Button>
                         </Link>
                       </div>
@@ -137,19 +135,18 @@ export default async function DashboardPage() {
           )}
         </div>
 
-        {/* Sidebar: badges + notifications */}
         <div className="space-y-4">
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className="text-base flex items-center gap-2">
                 <Award className="w-4 h-4 text-yellow-500" />
-                My Badges
+                Mis insignias
               </CardTitle>
             </CardHeader>
             <CardContent>
               {user?.badges.length === 0 ? (
                 <p className="text-sm text-muted-foreground text-center py-4">
-                  Complete lessons to earn badges!
+                  ¡Completá lecciones para ganar insignias!
                 </p>
               ) : (
                 <div className="flex flex-wrap gap-2">

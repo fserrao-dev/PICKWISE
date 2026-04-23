@@ -44,7 +44,7 @@ function QuestionForm({
     const explanation = (form.elements.namedItem("explanation") as HTMLInputElement).value;
 
     if (options.some((o) => !o.trim())) {
-      toast.error("All 4 options must be filled in");
+      toast.error("Las 4 opciones deben estar completas");
       return;
     }
 
@@ -54,17 +54,17 @@ function QuestionForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-4 border rounded-lg p-4 bg-muted/30">
       <div className="space-y-2">
-        <Label>Question Text</Label>
+        <Label>Texto de la pregunta</Label>
         <Textarea
           name="text"
-          placeholder="Enter your question..."
+          placeholder="Ingresá la pregunta..."
           defaultValue={initial?.text}
           required
           rows={2}
         />
       </div>
       <div className="space-y-2">
-        <Label>Answer Options (select the correct one)</Label>
+        <Label>Opciones de respuesta (seleccioná la correcta)</Label>
         <div className="space-y-2">
           {options.map((opt, i) => (
             <div key={i} className="flex items-center gap-2">
@@ -86,30 +86,30 @@ function QuestionForm({
                   next[i] = e.target.value;
                   setOptions(next);
                 }}
-                placeholder={`Option ${i + 1}`}
+                placeholder={`Opción ${i + 1}`}
                 required
               />
             </div>
           ))}
         </div>
-        <p className="text-xs text-muted-foreground">Click the circle to mark the correct answer</p>
+        <p className="text-xs text-muted-foreground">Hacé clic en el círculo para marcar la respuesta correcta</p>
       </div>
       <div className="space-y-2">
-        <Label>Explanation (optional)</Label>
+        <Label>Explicación (opcional)</Label>
         <Input
           name="explanation"
-          placeholder="Explain why the answer is correct..."
+          placeholder="Explicá por qué la respuesta es correcta..."
           defaultValue={initial?.explanation || ""}
         />
       </div>
       <div className="flex gap-2">
         <Button type="submit" size="sm">
           <Check className="w-4 h-4" />
-          {initial ? "Update" : "Add"} Question
+          {initial ? "Actualizar" : "Agregar"} pregunta
         </Button>
         <Button type="button" size="sm" variant="outline" onClick={onCancel}>
           <X className="w-4 h-4" />
-          Cancel
+          Cancelar
         </Button>
       </div>
     </form>
@@ -129,7 +129,7 @@ export function QuestionManager({ lessonId, questions }: QuestionManagerProps) {
     if (result.error) {
       toast.error(result.error);
     } else {
-      toast.success("Question added");
+      toast.success("Pregunta agregada");
       setAdding(false);
       router.refresh();
     }
@@ -142,17 +142,17 @@ export function QuestionManager({ lessonId, questions }: QuestionManagerProps) {
     if (result.error) {
       toast.error(result.error);
     } else {
-      toast.success("Question updated");
+      toast.success("Pregunta actualizada");
       setEditingId(null);
       router.refresh();
     }
   }
 
   async function handleDelete(id: string) {
-    if (!confirm("Delete this question?")) return;
+    if (!confirm("¿Eliminar esta pregunta?")) return;
     const result = await deleteQuestion(id, lessonId);
     if (result.success) {
-      toast.success("Question deleted");
+      toast.success("Pregunta eliminada");
       router.refresh();
     }
   }
@@ -161,14 +161,14 @@ export function QuestionManager({ lessonId, questions }: QuestionManagerProps) {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <h2 className="text-xl font-semibold">Quiz Questions</h2>
+          <h2 className="text-xl font-semibold">Preguntas del quiz</h2>
           <Badge variant={questions.length >= 3 ? "success" : "warning"}>
-            {questions.length} / min 3
+            {questions.length} / mín 3
           </Badge>
         </div>
         <Button onClick={() => setAdding(true)} disabled={adding}>
           <Plus className="w-4 h-4" />
-          Add Question
+          Agregar pregunta
         </Button>
       </div>
 
@@ -179,8 +179,8 @@ export function QuestionManager({ lessonId, questions }: QuestionManagerProps) {
       {questions.length === 0 && !adding ? (
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-10 text-center">
-            <p className="text-muted-foreground mb-2">No questions yet</p>
-            <p className="text-sm text-muted-foreground">Add at least 3 questions for the quiz</p>
+            <p className="text-muted-foreground mb-2">Aún no hay preguntas</p>
+            <p className="text-sm text-muted-foreground">Agregá al menos 3 preguntas para el quiz</p>
           </CardContent>
         </Card>
       ) : (
@@ -201,7 +201,7 @@ export function QuestionManager({ lessonId, questions }: QuestionManagerProps) {
                     <div className="flex-1 space-y-2">
                       <div className="flex items-center gap-2">
                         <span className="text-xs font-medium text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
-                          Q{i + 1}
+                          P{i + 1}
                         </span>
                         <p className="font-medium text-sm">{q.text}</p>
                       </div>
@@ -222,7 +222,7 @@ export function QuestionManager({ lessonId, questions }: QuestionManagerProps) {
                       </div>
                       {q.explanation && (
                         <p className="text-xs text-muted-foreground pl-8">
-                          Explanation: {q.explanation}
+                          Explicación: {q.explanation}
                         </p>
                       )}
                     </div>

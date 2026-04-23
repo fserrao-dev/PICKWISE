@@ -51,7 +51,6 @@ export default async function CourseOverviewPage({ params }: Props) {
 
   return (
     <div className="max-w-3xl space-y-6">
-      {/* Header */}
       <div className="space-y-3">
         {course.coverImageUrl ? (
           <div className="aspect-video rounded-xl overflow-hidden">
@@ -70,7 +69,7 @@ export default async function CourseOverviewPage({ params }: Props) {
         {enrollment ? (
           <div className="space-y-2">
             <div className="flex items-center justify-between text-sm">
-              <span className="text-muted-foreground">{completedCount}/{totalCount} lessons completed</span>
+              <span className="text-muted-foreground">{completedCount}/{totalCount} lecciones completadas</span>
               <span className="font-semibold">{pct}%</span>
             </div>
             <Progress value={pct} className="h-3" />
@@ -86,14 +85,14 @@ export default async function CourseOverviewPage({ params }: Props) {
                 <Link href={`/courses/${course.id}/learn/${resumeLesson.id}`}>
                   <Button>
                     <PlayCircle className="w-4 h-4" />
-                    {pct === 0 ? "Start Course" : pct === 100 ? "Review" : "Continue"}
+                    {pct === 0 ? "Empezar curso" : pct === 100 ? "Repasar" : "Continuar"}
                   </Button>
                 </Link>
               )}
               {pct === 100 && enrollment.completedAt && (
                 <>
                   <Badge variant="success" className="flex items-center gap-1 px-3 py-1.5">
-                    <Trophy className="w-3.5 h-3.5" /> Course Complete!
+                    <Trophy className="w-3.5 h-3.5" /> ¡Curso completado!
                   </Badge>
                   {enrollment.certificateUrl && (
                     <CertificateDownload
@@ -108,9 +107,8 @@ export default async function CourseOverviewPage({ params }: Props) {
         </div>
       </div>
 
-      {/* Modules / lessons */}
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold">Course Content</h2>
+        <h2 className="text-xl font-semibold">Contenido del curso</h2>
         {course.modules.map((module) => {
           const mTotal = module.lessons.length;
           const mDone = module.lessons.filter((l) => l.progress.some((p) => p.completed)).length;
@@ -165,7 +163,7 @@ export default async function CourseOverviewPage({ params }: Props) {
                         </div>
                         <div className="shrink-0 flex items-center gap-1 text-xs text-muted-foreground">
                           <BookOpen className="w-3 h-3" />
-                          {lesson._count.questions}Q
+                          {lesson._count.questions}P
                         </div>
                       </div>
                     );

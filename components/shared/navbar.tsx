@@ -14,7 +14,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 interface NavbarProps {
@@ -25,9 +24,9 @@ interface NavbarProps {
 }
 
 const navLinks = [
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/courses", label: "Courses", icon: GraduationCap },
-  { href: "/leaderboard", label: "Leaderboard", icon: Trophy },
+  { href: "/dashboard", label: "Inicio", icon: LayoutDashboard },
+  { href: "/courses", label: "Cursos", icon: GraduationCap },
+  { href: "/leaderboard", label: "Ranking", icon: Trophy },
 ];
 
 export function Navbar({ userName, userEmail, userAvatar, unreadCount }: NavbarProps) {
@@ -99,7 +98,7 @@ export function Navbar({ userName, userEmail, userAvatar, unreadCount }: NavbarP
               <DropdownMenuItem asChild>
                 <Link href="/profile">
                   <User className="mr-2 h-4 w-4" />
-                  Profile
+                  Mi perfil
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
@@ -108,7 +107,7 @@ export function Navbar({ userName, userEmail, userAvatar, unreadCount }: NavbarP
                 onClick={() => signOut({ callbackUrl: "/login" })}
               >
                 <LogOut className="mr-2 h-4 w-4" />
-                Sign out
+                Cerrar sesión
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

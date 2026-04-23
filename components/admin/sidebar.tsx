@@ -19,10 +19,10 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 
 const navItems = [
-  { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/admin/courses", label: "Courses", icon: GraduationCap },
-  { href: "/admin/students", label: "Students", icon: Users },
-  { href: "/admin/notifications", label: "Notifications", icon: Bell },
+  { href: "/admin/dashboard", label: "Panel", icon: LayoutDashboard },
+  { href: "/admin/courses", label: "Cursos", icon: GraduationCap },
+  { href: "/admin/students", label: "Estudiantes", icon: Users },
+  { href: "/admin/notifications", label: "Notificaciones", icon: Bell },
 ];
 
 interface SidebarProps {
@@ -113,10 +113,10 @@ export function AdminSidebar({ userName, userEmail, userAvatar }: SidebarProps) 
             collapsed ? "h-8 w-8 mx-auto flex" : "justify-start gap-2"
           )}
           onClick={() => signOut({ callbackUrl: "/login" })}
-          title={collapsed ? "Sign out" : undefined}
+          title={collapsed ? "Cerrar sesión" : undefined}
         >
           <LogOut className="h-4 w-4" />
-          {!collapsed && "Sign out"}
+          {!collapsed && "Cerrar sesión"}
         </Button>
       </div>
     </aside>

@@ -12,7 +12,7 @@ export function CertificateDownload({ certificateUrl, courseName }: Props) {
   function handleDownload() {
     const link = document.createElement("a");
     link.href = certificateUrl;
-    link.download = `${courseName.replace(/\s+/g, "-")}-certificate.pdf`;
+    link.download = `${courseName.replace(/\s+/g, "-")}-certificado.pdf`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -21,7 +21,7 @@ export function CertificateDownload({ certificateUrl, courseName }: Props) {
   return (
     <Button variant="outline" onClick={handleDownload}>
       <Download className="w-4 h-4" />
-      Download Certificate
+      Descargar certificado
     </Button>
   );
 }

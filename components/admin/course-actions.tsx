@@ -36,7 +36,7 @@ export function CourseActions({ courseId, isPublished, courseTitle }: CourseActi
   async function handleTogglePublish() {
     const result = await toggleCoursePublish(courseId, !isPublished);
     if (result.success) {
-      toast.success(isPublished ? "Course unpublished" : "Course published");
+      toast.success(isPublished ? "Curso despublicado" : "Curso publicado");
       router.refresh();
     }
   }
@@ -46,7 +46,7 @@ export function CourseActions({ courseId, isPublished, courseTitle }: CourseActi
     const result = await deleteCourse(courseId);
     setLoading(false);
     if (result.success) {
-      toast.success("Course deleted");
+      toast.success("Curso eliminado");
       setDeleteOpen(false);
       router.refresh();
     }
@@ -65,12 +65,12 @@ export function CourseActions({ courseId, isPublished, courseTitle }: CourseActi
             {isPublished ? (
               <>
                 <EyeOff className="mr-2 h-4 w-4" />
-                Unpublish
+                Despublicar
               </>
             ) : (
               <>
                 <Eye className="mr-2 h-4 w-4" />
-                Publish
+                Publicar
               </>
             )}
           </DropdownMenuItem>
@@ -80,7 +80,7 @@ export function CourseActions({ courseId, isPublished, courseTitle }: CourseActi
             onClick={() => setDeleteOpen(true)}
           >
             <Trash2 className="mr-2 h-4 w-4" />
-            Delete
+            Eliminar
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -88,18 +88,18 @@ export function CourseActions({ courseId, isPublished, courseTitle }: CourseActi
       <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Delete Course</DialogTitle>
+            <DialogTitle>Eliminar curso</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete &quot;{courseTitle}&quot;? This will also delete all modules,
-              lessons, and student progress. This action cannot be undone.
+              ¿Estás seguro de que querés eliminar &quot;{courseTitle}&quot;? También se eliminarán todos los módulos,
+              lecciones y el progreso de los estudiantes. Esta acción no se puede deshacer.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" onClick={() => setDeleteOpen(false)}>
-              Cancel
+              Cancelar
             </Button>
             <Button variant="destructive" onClick={handleDelete} disabled={loading}>
-              {loading ? "Deleting..." : "Delete Course"}
+              {loading ? "Eliminando..." : "Eliminar curso"}
             </Button>
           </DialogFooter>
         </DialogContent>

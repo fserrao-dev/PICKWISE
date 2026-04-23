@@ -30,7 +30,7 @@ export function NotificationsList({ notifications }: { notifications: Notificati
     startTransition(async () => {
       await markAllNotificationsRead();
       setItems((prev) => prev.map((n) => ({ ...n, read: true })));
-      toast.success("All notifications marked as read");
+      toast.success("Todas las notificaciones marcadas como leídas");
     });
   }
 
@@ -42,7 +42,7 @@ export function NotificationsList({ notifications }: { notifications: Notificati
         <div className="flex items-center justify-between">
           <CardTitle className="text-base flex items-center gap-2">
             <Bell className="w-4 h-4" />
-            Notifications
+            Notificaciones
             {unread > 0 && (
               <span className="bg-primary text-primary-foreground text-xs rounded-full px-1.5 py-0.5 min-w-[20px] text-center">
                 {unread}
@@ -58,14 +58,14 @@ export function NotificationsList({ notifications }: { notifications: Notificati
               disabled={pending}
             >
               <CheckCheck className="w-3 h-3" />
-              Mark all read
+              Marcar todas como leídas
             </Button>
           )}
         </div>
       </CardHeader>
       <CardContent>
         {items.length === 0 ? (
-          <p className="text-sm text-muted-foreground text-center py-4">No notifications</p>
+          <p className="text-sm text-muted-foreground text-center py-4">Sin notificaciones</p>
         ) : (
           <div className="space-y-2 max-h-64 overflow-y-auto">
             {items.map((n) => (
@@ -79,7 +79,7 @@ export function NotificationsList({ notifications }: { notifications: Notificati
               >
                 <p className="text-xs leading-snug">{n.message}</p>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  {new Date(n.createdAt).toLocaleDateString()}
+                  {new Date(n.createdAt).toLocaleDateString("es")}
                 </p>
               </div>
             ))}

@@ -2,7 +2,6 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { Trophy, Medal, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -19,9 +18,7 @@ export default async function LeaderboardPage() {
   });
 
   const myRank = top20.findIndex((u) => u.id === userId);
-  const me = top20[myRank];
 
-  // If current user not in top 20, fetch their actual rank
   let userRank = myRank + 1;
   if (myRank === -1) {
     const count = await prisma.user.count({
@@ -42,18 +39,17 @@ export default async function LeaderboardPage() {
       <div>
         <h1 className="text-3xl font-bold flex items-center gap-2">
           <Trophy className="w-8 h-8 text-yellow-500" />
-          Leaderboard
+          Ranking
         </h1>
-        <p className="text-muted-foreground">Top students ranked by points earned</p>
+        <p className="text-muted-foreground">Mejores estudiantes ordenados por puntos obtenidos</p>
       </div>
 
-      {/* Current user's rank if not in top 20 */}
       {myRank === -1 && (
         <Card className="border-primary/30 bg-primary/5">
           <CardContent className="py-4">
             <div className="flex items-center gap-3">
               <span className="text-lg font-bold text-primary">#{userRank}</span>
-              <span className="text-sm">Your current rank</span>
+              <span className="text-sm">Tu posición actual</span>
               <div className="ml-auto flex items-center gap-1 text-sm font-medium">
                 <Star className="w-4 h-4 text-yellow-500 fill-yellow-400" />
                 {session.user.name ? (
@@ -67,14 +63,14 @@ export default async function LeaderboardPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Top 20 Students</CardTitle>
-          <CardDescription>Earn points by completing quiz questions correctly (10 pts each)</CardDescription>
+          <CardTitle>Top 20 estudiantes</CardTitle>
+          <CardDescription>Ganás puntos respondiendo correctamente en los quizzes (10 pts c/u)</CardDescription>
         </CardHeader>
         <CardContent className="p-0">
           <div className="divide-y">
             {top20.length === 0 ? (
               <div className="py-12 text-center text-muted-foreground">
-                No rankings yet. Start completing quizzes to appear here!
+                Aún no hay ranking. ¡Completá quizzes para aparecer aquí!
               </div>
             ) : (
               top20.map((student, idx) => {
@@ -102,7 +98,7 @@ export default async function LeaderboardPage() {
                       <div className="flex items-center gap-2 flex-wrap">
                         <p className={cn("font-medium text-sm", isMe && "text-primary")}>
                           {student.name}
-                          {isMe && <span className="text-xs ml-1">(you)</span>}
+                          {isMe && <span className="text-xs ml-1">(vos)</span>}
                         </p>
                         {student.badges.slice(0, 3).map((ub) => (
                           <span key={ub.id} title={ub.badge.name} className="text-base leading-none">

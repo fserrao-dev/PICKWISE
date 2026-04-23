@@ -36,7 +36,7 @@ export function LessonEditor({ lesson }: LessonEditorProps) {
     if (result.error) {
       toast.error(result.error);
     } else {
-      toast.success("Lesson updated");
+      toast.success("Lección actualizada");
       setEditing(false);
       router.refresh();
     }
@@ -46,19 +46,19 @@ export function LessonEditor({ lesson }: LessonEditorProps) {
     return (
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>Lesson Details</CardTitle>
+          <CardTitle>Datos de la lección</CardTitle>
           <Button variant="outline" size="sm" onClick={() => setEditing(true)}>
-            Edit
+            Editar
           </Button>
         </CardHeader>
         <CardContent className="space-y-2">
           <div>
-            <span className="text-sm font-medium">YouTube URL: </span>
+            <span className="text-sm font-medium">URL de YouTube: </span>
             <span className="text-sm text-muted-foreground">{lesson.youtubeUrl}</span>
           </div>
           {lesson.description && (
             <div>
-              <span className="text-sm font-medium">Description: </span>
+              <span className="text-sm font-medium">Descripción: </span>
               <span className="text-sm text-muted-foreground">{lesson.description}</span>
             </div>
           )}
@@ -70,16 +70,16 @@ export function LessonEditor({ lesson }: LessonEditorProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Edit Lesson</CardTitle>
+        <CardTitle>Editar lección</CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="title">Title</Label>
+            <Label htmlFor="title">Título</Label>
             <Input id="title" name="title" defaultValue={lesson.title} required />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="youtubeUrl">YouTube URL</Label>
+            <Label htmlFor="youtubeUrl">URL de YouTube</Label>
             <Input
               id="youtubeUrl"
               name="youtubeUrl"
@@ -89,7 +89,7 @@ export function LessonEditor({ lesson }: LessonEditorProps) {
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
+            <Label htmlFor="description">Descripción</Label>
             <Textarea
               id="description"
               name="description"
@@ -100,10 +100,10 @@ export function LessonEditor({ lesson }: LessonEditorProps) {
           <div className="flex gap-3">
             <Button type="submit" disabled={loading}>
               {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-              Save
+              Guardar
             </Button>
             <Button type="button" variant="outline" onClick={() => setEditing(false)}>
-              Cancel
+              Cancelar
             </Button>
           </div>
         </form>

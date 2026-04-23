@@ -16,7 +16,6 @@ export default async function LearnPage({ params }: Props) {
   if (!session) return null;
   const userId = session.user.id;
 
-  // Verify enrollment
   const enrollment = await prisma.enrollment.findUnique({
     where: { userId_courseId: { userId, courseId: params.id } },
   });
@@ -65,7 +64,6 @@ export default async function LearnPage({ params }: Props) {
 
   return (
     <div className="max-w-4xl space-y-4">
-      {/* Breadcrumb + nav */}
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div className="flex items-center gap-2 text-sm">
           <Link href={`/courses/${course.id}`} className="text-muted-foreground hover:text-foreground flex items-center gap-1">
@@ -76,14 +74,13 @@ export default async function LearnPage({ params }: Props) {
           <span className="font-medium truncate">{lesson.title}</span>
         </div>
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <span>{completedCount}/{allLessons.length} completed</span>
+          <span>{completedCount}/{allLessons.length} completadas</span>
           <div className="w-24">
             <Progress value={pct} className="h-2" />
           </div>
         </div>
       </div>
 
-      {/* Title + status */}
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="text-sm text-muted-foreground">{lesson.module.title}</p>
@@ -92,12 +89,11 @@ export default async function LearnPage({ params }: Props) {
         {isCompleted && (
           <Badge variant="success" className="flex items-center gap-1 shrink-0">
             <CheckCircle2 className="w-3.5 h-3.5" />
-            Completed
+            Completada
           </Badge>
         )}
       </div>
 
-      {/* Video */}
       {videoId ? (
         <div className="aspect-video rounded-xl overflow-hidden bg-black shadow-lg">
           <iframe
@@ -110,18 +106,16 @@ export default async function LearnPage({ params }: Props) {
         </div>
       ) : (
         <div className="aspect-video rounded-xl bg-muted flex items-center justify-center">
-          <p className="text-muted-foreground">Video not available</p>
+          <p className="text-muted-foreground">Video no disponible</p>
         </div>
       )}
 
-      {/* Description */}
       {lesson.description && (
         <div className="prose prose-sm max-w-none text-muted-foreground bg-muted/40 rounded-lg p-4">
           {lesson.description}
         </div>
       )}
 
-      {/* Quiz */}
       <LessonPlayer
         lessonId={lesson.id}
         courseId={course.id}
@@ -130,13 +124,12 @@ export default async function LearnPage({ params }: Props) {
         prevAttempt={prevAttempt as any}
       />
 
-      {/* Lesson navigation */}
       <div className="flex items-center justify-between pt-2">
         {prevLesson ? (
           <Link href={`/courses/${course.id}/learn/${prevLesson.id}`}>
             <Button variant="outline" size="sm">
               <ArrowLeft className="w-4 h-4" />
-              Previous
+              Anterior
             </Button>
           </Link>
         ) : <div />}
@@ -145,20 +138,20 @@ export default async function LearnPage({ params }: Props) {
           isCompleted ? (
             <Link href={`/courses/${course.id}/learn/${nextLesson.id}`}>
               <Button size="sm">
-                Next Lesson
+                Siguiente lección
                 <ArrowRight className="w-4 h-4" />
               </Button>
             </Link>
           ) : (
-            <Button size="sm" disabled title="Complete this lesson to unlock the next">
+            <Button size="sm" disabled title="Completá esta lección para desbloquear la siguiente">
               <Lock className="w-4 h-4" />
-              Next Lesson
+              Siguiente lección
             </Button>
           )
         ) : isCompleted ? (
           <Link href={`/courses/${course.id}`}>
             <Button size="sm" variant="outline">
-              Back to Course
+              Volver al curso
             </Button>
           </Link>
         ) : <div />}

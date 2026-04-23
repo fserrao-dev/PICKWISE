@@ -7,13 +7,13 @@ import { auth } from "@/lib/auth";
 import { sendNotificationEmail } from "@/lib/email";
 
 const notifSchema = z.object({
-  message: z.string().min(5, "Message must be at least 5 characters"),
+  message: z.string().min(5, "El mensaje debe tener al menos 5 caracteres"),
   targetUserId: z.string().optional(),
 });
 
 export async function sendAdminNotification(formData: FormData) {
   const session = await auth();
-  if (!session || session.user.role !== "ADMIN") return { error: "Unauthorized" };
+  if (!session || session.user.role !== "ADMIN") return { error: "No autorizado" };
 
   const raw = {
     message: formData.get("message") as string,
@@ -27,7 +27,7 @@ export async function sendAdminNotification(formData: FormData) {
 
   if (targetUserId && targetUserId !== "all") {
     const user = await prisma.user.findUnique({ where: { id: targetUserId } });
-    if (!user) return { error: "User not found" };
+    if (!user) return { error: "Usuario no encontrado" };
 
     await prisma.notification.create({ data: { userId: targetUserId, message } });
     sendNotificationEmail(user.name, user.email, message).catch(console.error);
@@ -47,7 +47,7 @@ export async function sendAdminNotification(formData: FormData) {
 
 export async function deleteUser(userId: string) {
   const session = await auth();
-  if (!session || session.user.role !== "ADMIN") return { error: "Unauthorized" };
+  if (!session || session.user.role !== "ADMIN") return { error: "No autorizado" };
 
   await prisma.user.delete({ where: { id: userId } });
   revalidatePath("/admin/students");

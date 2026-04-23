@@ -29,15 +29,15 @@ export default async function StudentsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold">Students</h1>
-        <p className="text-muted-foreground">{students.length} registered students</p>
+        <h1 className="text-3xl font-bold">Estudiantes</h1>
+        <p className="text-muted-foreground">{students.length} estudiantes registrados</p>
       </div>
 
       {students.length === 0 ? (
         <div className="text-center py-16">
           <Users className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-          <h3 className="text-lg font-medium mb-2">No students yet</h3>
-          <p className="text-muted-foreground">Students will appear here once they register</p>
+          <h3 className="text-lg font-medium mb-2">Aún no hay estudiantes</h3>
+          <p className="text-muted-foreground">Los estudiantes aparecerán aquí una vez que se registren</p>
         </div>
       ) : (
         <div className="space-y-4">
@@ -80,12 +80,12 @@ export default async function StudentsPage() {
                     ))}
                   </div>
                   <div className="text-sm text-muted-foreground">
-                    <span>{student.enrollments.length} courses enrolled</span>
+                    <span>{student.enrollments.length} cursos inscripto</span>
                     <span className="mx-2">·</span>
-                    <span>{student._count.quizAttempts} quiz attempts</span>
+                    <span>{student._count.quizAttempts} intentos de quiz</span>
                     <span className="mx-2">·</span>
                     <span>
-                      {student.enrollments.filter((e) => e.completedAt).length} completed
+                      {student.enrollments.filter((e) => e.completedAt).length} completados
                     </span>
                   </div>
                   {student.enrollments.length > 0 && (

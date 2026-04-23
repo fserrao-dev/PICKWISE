@@ -2,7 +2,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, AlertCircle } from "lucide-react";
 import { LessonEditor } from "@/components/admin/lesson-editor";
 import { QuestionManager } from "@/components/admin/question-manager";
@@ -44,8 +43,8 @@ export default async function LessonPage({ params }: Props) {
       {lesson.questions.length < 3 && (
         <div className="flex items-center gap-2 p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-yellow-800 dark:bg-yellow-900/20 dark:border-yellow-800 dark:text-yellow-300 text-sm">
           <AlertCircle className="h-4 w-4 shrink-0" />
-          This lesson needs at least 3 questions before students can take the quiz.
-          ({lesson.questions.length}/3 added)
+          Esta lección necesita al menos 3 preguntas antes de que los estudiantes puedan realizar el quiz.
+          ({lesson.questions.length}/3 agregadas)
         </div>
       )}
 

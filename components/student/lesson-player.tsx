@@ -64,7 +64,7 @@ export function LessonPlayer({ lessonId, courseId, questions, isCompleted, prevA
     return (
       <Card className="border-dashed">
         <CardContent className="flex items-center justify-center py-8 text-muted-foreground text-sm">
-          No quiz questions for this lesson yet.
+          Aún no hay preguntas de quiz para esta lección.
         </CardContent>
       </Card>
     );
@@ -72,7 +72,7 @@ export function LessonPlayer({ lessonId, courseId, questions, isCompleted, prevA
 
   async function handleSubmit() {
     if (answers.some((a) => a === null)) {
-      toast.error("Please answer all questions before submitting");
+      toast.error("Respondé todas las preguntas antes de enviar");
       return;
     }
     setLoading(true);
@@ -89,7 +89,7 @@ export function LessonPlayer({ lessonId, courseId, questions, isCompleted, prevA
       setScore({ score: result.score!, total: result.total!, pts: result.pointsEarned! });
       setPhase("result");
       if (result.pointsEarned! > 0) {
-        toast.success(`+${result.pointsEarned} points earned!`);
+        toast.success(`+${result.pointsEarned} puntos obtenidos!`);
       }
       router.refresh();
     }
@@ -102,7 +102,6 @@ export function LessonPlayer({ lessonId, courseId, questions, isCompleted, prevA
     setPhase("quiz");
   }
 
-  // === IDLE — show "Take Quiz" CTA ===
   if (phase === "idle") {
     return (
       <Card className="bg-primary/5 border-primary/20">
@@ -111,20 +110,19 @@ export function LessonPlayer({ lessonId, courseId, questions, isCompleted, prevA
             <Trophy className="w-7 h-7 text-primary" />
           </div>
           <div>
-            <h3 className="font-semibold text-lg mb-1">Ready for the quiz?</h3>
+            <h3 className="font-semibold text-lg mb-1">¿Listo para el quiz?</h3>
             <p className="text-sm text-muted-foreground">
-              {questions.length} questions · 10 points per correct answer
+              {questions.length} preguntas · 10 puntos por respuesta correcta
             </p>
           </div>
           <Button onClick={() => setPhase("quiz")} size="lg">
-            Take Quiz
+            Tomar quiz
           </Button>
         </CardContent>
       </Card>
     );
   }
 
-  // === QUIZ phase ===
   if (phase === "quiz") {
     const answered = answers.filter((a) => a !== null).length;
     return (
@@ -132,7 +130,7 @@ export function LessonPlayer({ lessonId, courseId, questions, isCompleted, prevA
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold">Quiz</h2>
           <span className="text-sm text-muted-foreground">
-            {answered}/{questions.length} answered
+            {answered}/{questions.length} respondidas
           </span>
         </div>
         <Progress value={(answered / questions.length) * 100} className="h-2" />
@@ -141,7 +139,7 @@ export function LessonPlayer({ lessonId, courseId, questions, isCompleted, prevA
           <Card key={q.id}>
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium">
-                <span className="text-muted-foreground mr-2">Q{qi + 1}.</span>
+                <span className="text-muted-foreground mr-2">P{qi + 1}.</span>
                 {q.text}
               </CardTitle>
             </CardHeader>
@@ -179,17 +177,15 @@ export function LessonPlayer({ lessonId, courseId, questions, isCompleted, prevA
           size="lg"
           className="w-full"
         >
-          {loading ? "Submitting…" : "Submit Quiz"}
+          {loading ? "Enviando..." : "Enviar quiz"}
         </Button>
       </div>
     );
   }
 
-  // === RESULTS phase ===
   const pct = score ? Math.round((score.score / score.total) * 100) : 0;
   return (
     <div className="space-y-4">
-      {/* Score card */}
       <Card className={cn(
         "text-center",
         pct === 100 ? "border-green-400 bg-green-50 dark:bg-green-900/20" :
@@ -199,23 +195,22 @@ export function LessonPlayer({ lessonId, courseId, questions, isCompleted, prevA
         <CardContent className="py-8 space-y-3">
           <div className="text-5xl font-bold">{pct}%</div>
           <div className="text-sm text-muted-foreground">
-            {score?.score}/{score?.total} correct
+            {score?.score}/{score?.total} correctas
           </div>
           {score && score.pts > 0 && (
             <div className="flex items-center justify-center gap-1 text-yellow-600 font-medium">
               <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-              +{score.pts} points earned
+              +{score.pts} puntos obtenidos
             </div>
           )}
           <Button variant="outline" size="sm" onClick={retake}>
             <RefreshCcw className="w-4 h-4" />
-            Retake Quiz
+            Volver a intentar
           </Button>
         </CardContent>
       </Card>
 
-      {/* Per-question breakdown */}
-      <h3 className="font-semibold">Review Answers</h3>
+      <h3 className="font-semibold">Revisar respuestas</h3>
       {questions.map((q, qi) => {
         const r = results?.[qi];
         const correct = r?.correct ?? false;

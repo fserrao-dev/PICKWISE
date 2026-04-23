@@ -21,13 +21,13 @@ export function AdminCharts({ topStudents, courseCompletionData }: AdminChartsPr
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <Card>
         <CardHeader>
-          <CardTitle>Top Students by Points</CardTitle>
-          <CardDescription>Top 10 students ranked by total points earned</CardDescription>
+          <CardTitle>Mejores estudiantes por puntos</CardTitle>
+          <CardDescription>Top 10 estudiantes ordenados por puntos totales obtenidos</CardDescription>
         </CardHeader>
         <CardContent>
           {topStudents.length === 0 ? (
             <div className="h-64 flex items-center justify-center text-muted-foreground">
-              No student data yet
+              Aún no hay datos de estudiantes
             </div>
           ) : (
             <ResponsiveContainer width="100%" height={250}>
@@ -40,7 +40,7 @@ export function AdminCharts({ topStudents, courseCompletionData }: AdminChartsPr
                   width={100}
                   tick={{ fontSize: 12 }}
                 />
-                <Tooltip formatter={(v) => [`${v} pts`, "Points"]} />
+                <Tooltip formatter={(v) => [`${v} pts`, "Puntos"]} />
                 <Bar dataKey="points" fill="#6366f1" radius={4} />
               </BarChart>
             </ResponsiveContainer>
@@ -50,13 +50,13 @@ export function AdminCharts({ topStudents, courseCompletionData }: AdminChartsPr
 
       <Card>
         <CardHeader>
-          <CardTitle>Course Completion Rates</CardTitle>
-          <CardDescription>Percentage of enrolled students who completed each course</CardDescription>
+          <CardTitle>Tasa de finalización de cursos</CardTitle>
+          <CardDescription>Porcentaje de estudiantes inscriptos que completaron cada curso</CardDescription>
         </CardHeader>
         <CardContent>
           {courseCompletionData.length === 0 ? (
             <div className="h-64 flex items-center justify-center text-muted-foreground">
-              No course data yet
+              Aún no hay datos de cursos
             </div>
           ) : (
             <ResponsiveContainer width="100%" height={250}>
@@ -69,7 +69,7 @@ export function AdminCharts({ topStudents, courseCompletionData }: AdminChartsPr
                   width={120}
                   tick={{ fontSize: 11 }}
                 />
-                <Tooltip formatter={(v) => [`${v}%`, "Completion Rate"]} />
+                <Tooltip formatter={(v) => [`${v}%`, "Tasa de finalización"]} />
                 <Bar dataKey="rate" fill="#10b981" radius={4} />
               </BarChart>
             </ResponsiveContainer>

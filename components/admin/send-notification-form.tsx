@@ -27,7 +27,7 @@ export function SendNotificationForm({ students }: { students: Student[] }) {
     if (result.error) {
       toast.error(result.error);
     } else {
-      toast.success("Notification sent!");
+      toast.success("¡Notificación enviada!");
       (e.target as HTMLFormElement).reset();
       setTargetUserId("all");
       router.refresh();
@@ -37,13 +37,13 @@ export function SendNotificationForm({ students }: { students: Student[] }) {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
-        <Label>Recipient</Label>
+        <Label>Destinatario</Label>
         <Select value={targetUserId} onValueChange={setTargetUserId}>
           <SelectTrigger>
-            <SelectValue placeholder="Select recipient" />
+            <SelectValue placeholder="Seleccioná un destinatario" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">📢 All Students ({students.length})</SelectItem>
+            <SelectItem value="all">📢 Todos los estudiantes ({students.length})</SelectItem>
             {students.map((s) => (
               <SelectItem key={s.id} value={s.id}>
                 {s.name} — {s.email}
@@ -53,18 +53,18 @@ export function SendNotificationForm({ students }: { students: Student[] }) {
         </Select>
       </div>
       <div className="space-y-2">
-        <Label htmlFor="message">Message</Label>
+        <Label htmlFor="message">Mensaje</Label>
         <Textarea
           id="message"
           name="message"
-          placeholder="Type your notification message here…"
+          placeholder="Escribí el mensaje de notificación aquí..."
           rows={4}
           required
         />
       </div>
       <Button type="submit" disabled={loading}>
         {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-        Send Notification
+        Enviar notificación
       </Button>
     </form>
   );

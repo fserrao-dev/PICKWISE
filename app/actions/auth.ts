@@ -8,13 +8,13 @@ import { sendWelcomeEmail } from "@/lib/email";
 import { AuthError } from "next-auth";
 
 const registerSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  email: z.string().email("Invalid email address"),
+  name: z.string().min(2, "El nombre debe tener al menos 2 caracteres"),
+  email: z.string().email("Correo electrónico inválido"),
   password: z
     .string()
-    .min(8, "Password must be at least 8 characters")
-    .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
-    .regex(/[0-9]/, "Password must contain at least one number"),
+    .min(8, "La contraseña debe tener al menos 8 caracteres")
+    .regex(/[A-Z]/, "La contraseña debe contener al menos una letra mayúscula")
+    .regex(/[0-9]/, "La contraseña debe contener al menos un número"),
 });
 
 export async function registerUser(formData: FormData) {
@@ -33,7 +33,7 @@ export async function registerUser(formData: FormData) {
 
   const existing = await prisma.user.findUnique({ where: { email } });
   if (existing) {
-    return { error: "An account with this email already exists" };
+    return { error: "Ya existe una cuenta con ese correo electrónico" };
   }
 
   const hashed = await bcrypt.hash(password, 12);
@@ -60,7 +60,7 @@ export async function loginUser(formData: FormData) {
     return { success: true };
   } catch (error) {
     if (error instanceof AuthError) {
-      return { error: "Invalid email or password" };
+      return { error: "Email o contraseña incorrectos" };
     }
     throw error;
   }

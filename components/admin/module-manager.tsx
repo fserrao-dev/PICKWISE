@@ -56,7 +56,7 @@ export function ModuleManager({ courseId, modules }: ModuleManagerProps) {
     if (result.error) {
       toast.error(result.error);
     } else {
-      toast.success("Module added");
+      toast.success("Módulo agregado");
       setAddModuleOpen(false);
       router.refresh();
     }
@@ -73,17 +73,17 @@ export function ModuleManager({ courseId, modules }: ModuleManagerProps) {
     if (result.error) {
       toast.error(result.error);
     } else {
-      toast.success("Lesson added");
+      toast.success("Lección agregada");
       setAddLessonModuleId(null);
       router.refresh();
     }
   }
 
   async function handleDeleteModule(moduleId: string) {
-    if (!confirm("Delete this module and all its lessons?")) return;
+    if (!confirm("¿Eliminar este módulo y todas sus lecciones?")) return;
     const result = await deleteModule(moduleId, courseId);
     if (result.success) {
-      toast.success("Module deleted");
+      toast.success("Módulo eliminado");
       router.refresh();
     }
   }
@@ -100,10 +100,10 @@ export function ModuleManager({ courseId, modules }: ModuleManagerProps) {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold">Modules & Lessons</h2>
+        <h2 className="text-xl font-semibold">Módulos y lecciones</h2>
         <Button onClick={() => setAddModuleOpen(true)}>
           <Plus className="w-4 h-4" />
-          Add Module
+          Agregar módulo
         </Button>
       </div>
 
@@ -111,7 +111,7 @@ export function ModuleManager({ courseId, modules }: ModuleManagerProps) {
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
             <BookOpen className="w-10 h-10 text-muted-foreground mb-3" />
-            <p className="text-muted-foreground">No modules yet. Add your first module to get started.</p>
+            <p className="text-muted-foreground">Aún no hay módulos. Agregá el primero para comenzar.</p>
           </CardContent>
         </Card>
       ) : (
@@ -133,7 +133,7 @@ export function ModuleManager({ courseId, modules }: ModuleManagerProps) {
                       )}
                       <span className="font-medium">{module.title}</span>
                       <Badge variant="secondary" className="text-xs">
-                        {module.lessons.length} lessons
+                        {module.lessons.length} lecciones
                       </Badge>
                     </button>
                     <div className="flex items-center gap-2">
@@ -143,7 +143,7 @@ export function ModuleManager({ courseId, modules }: ModuleManagerProps) {
                         onClick={() => setAddLessonModuleId(module.id)}
                       >
                         <Plus className="w-3 h-3" />
-                        Lesson
+                        Lección
                       </Button>
                       <Button
                         size="icon"
@@ -172,11 +172,11 @@ export function ModuleManager({ courseId, modules }: ModuleManagerProps) {
                           <div className="flex items-center gap-2 shrink-0">
                             <span className="text-xs text-muted-foreground flex items-center gap-1">
                               <FileQuestion className="h-3 w-3" />
-                              {lesson._count.questions} Q
+                              {lesson._count.questions} P
                             </span>
                             <Link href={`/admin/lessons/${lesson.id}`}>
                               <Button size="sm" variant="ghost" className="h-7 text-xs">
-                                Edit
+                                Editar
                               </Button>
                             </Link>
                           </div>
@@ -194,19 +194,19 @@ export function ModuleManager({ courseId, modules }: ModuleManagerProps) {
       <Dialog open={addModuleOpen} onOpenChange={setAddModuleOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Add Module</DialogTitle>
+            <DialogTitle>Agregar módulo</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleAddModule} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="title">Module Title</Label>
-              <Input id="title" name="title" placeholder="e.g. Getting Started" required />
+              <Label htmlFor="title">Título del módulo</Label>
+              <Input id="title" name="title" placeholder="ej. Introducción" required />
             </div>
             <DialogFooter>
               <Button type="button" variant="outline" onClick={() => setAddModuleOpen(false)}>
-                Cancel
+                Cancelar
               </Button>
               <Button type="submit" disabled={loading}>
-                {loading ? "Adding..." : "Add Module"}
+                {loading ? "Agregando..." : "Agregar módulo"}
               </Button>
             </DialogFooter>
           </form>
@@ -216,32 +216,32 @@ export function ModuleManager({ courseId, modules }: ModuleManagerProps) {
       <Dialog open={!!addLessonModuleId} onOpenChange={() => setAddLessonModuleId(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Add Lesson</DialogTitle>
+            <DialogTitle>Agregar lección</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleAddLesson} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="lessonTitle">Lesson Title</Label>
-              <Input id="lessonTitle" name="title" placeholder="e.g. Introduction to Variables" required />
+              <Label htmlFor="lessonTitle">Título de la lección</Label>
+              <Input id="lessonTitle" name="title" placeholder="ej. Introducción a las Variables" required />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="youtubeUrl">YouTube URL</Label>
+              <Label htmlFor="youtubeUrl">URL de YouTube</Label>
               <Input
                 id="youtubeUrl"
                 name="youtubeUrl"
-                placeholder="https://www.youtube.com/watch?v=... or youtu.be/..."
+                placeholder="https://www.youtube.com/watch?v=... o youtu.be/..."
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="lessonDesc">Description (optional)</Label>
-              <Textarea id="lessonDesc" name="description" placeholder="Brief description..." rows={2} />
+              <Label htmlFor="lessonDesc">Descripción (opcional)</Label>
+              <Textarea id="lessonDesc" name="description" placeholder="Descripción breve..." rows={2} />
             </div>
             <DialogFooter>
               <Button type="button" variant="outline" onClick={() => setAddLessonModuleId(null)}>
-                Cancel
+                Cancelar
               </Button>
               <Button type="submit" disabled={loading}>
-                {loading ? "Adding..." : "Add Lesson"}
+                {loading ? "Agregando..." : "Agregar lección"}
               </Button>
             </DialogFooter>
           </form>

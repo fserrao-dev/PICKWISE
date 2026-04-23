@@ -9,14 +9,14 @@ import { generateCertificate } from "@/lib/certificate";
 
 export async function enrollInCourse(courseId: string) {
   const session = await auth();
-  if (!session) return { error: "Not authenticated" };
+  if (!session) return { error: "No autenticado" };
 
   const userId = session.user.id;
 
   const existing = await prisma.enrollment.findUnique({
     where: { userId_courseId: { userId, courseId } },
   });
-  if (existing) return { error: "Already enrolled" };
+  if (existing) return { error: "Ya estás inscripto en este curso" };
 
   const [enrollment, course, user] = await Promise.all([
     prisma.enrollment.create({ data: { userId, courseId } }),
@@ -26,7 +26,7 @@ export async function enrollInCourse(courseId: string) {
 
   if (course && user) {
     sendEnrollmentEmail(user.name, user.email, course.title).catch(console.error);
-    createNotification(userId, `You've been enrolled in "${course.title}"`).catch(console.error);
+    createNotification(userId, `Te inscribiste en "${course.title}"`).catch(console.error);
   }
 
   revalidatePath("/dashboard");
@@ -36,12 +36,12 @@ export async function enrollInCourse(courseId: string) {
 
 export async function adminEnrollStudent(userId: string, courseId: string) {
   const session = await auth();
-  if (!session || session.user.role !== "ADMIN") return { error: "Unauthorized" };
+  if (!session || session.user.role !== "ADMIN") return { error: "No autorizado" };
 
   const existing = await prisma.enrollment.findUnique({
     where: { userId_courseId: { userId, courseId } },
   });
-  if (existing) return { error: "Student already enrolled" };
+  if (existing) return { error: "El estudiante ya está inscripto" };
 
   const [enrollment, course, user] = await Promise.all([
     prisma.enrollment.create({ data: { userId, courseId } }),
@@ -51,7 +51,7 @@ export async function adminEnrollStudent(userId: string, courseId: string) {
 
   if (course && user) {
     sendEnrollmentEmail(user.name, user.email, course.title).catch(console.error);
-    createNotification(userId, `You've been enrolled in "${course.title}" by an administrator`).catch(console.error);
+    createNotification(userId, `Un administrador te inscribió en "${course.title}"`).catch(console.error);
   }
 
   revalidatePath("/admin/students");
@@ -64,13 +64,13 @@ export async function submitQuiz(
   courseId: string
 ) {
   const session = await auth();
-  if (!session) return { error: "Not authenticated" };
+  if (!session) return { error: "No autenticado" };
 
   const userId = session.user.id;
 
   const questions = await prisma.question.findMany({ where: { lessonId } });
 
-  if (questions.length === 0) return { error: "No questions found" };
+  if (questions.length === 0) return { error: "No se encontraron preguntas" };
 
   let score = 0;
   const results = questions.map((q, i) => {
@@ -165,7 +165,7 @@ async function checkCourseCompletion(userId: string, courseId: string) {
           certUrl = `data:application/pdf;base64,${certBuffer.toString("base64")}`;
         }
       } catch {
-        console.error("Certificate generation failed");
+        console.error("Error al generar el certificado");
       }
 
       await prisma.enrollment.update({
@@ -178,7 +178,7 @@ async function checkCourseCompletion(userId: string, courseId: string) {
         sendCompletionEmail(user.name, user.email, course.title).catch(console.error);
         createNotification(
           userId,
-          `🎉 Congratulations! You completed "${course.title}" and earned your certificate!`
+          `🎉 ¡Felicitaciones! Completaste "${course.title}" y obtuviste tu certificado!`
         ).catch(console.error);
       }
 
@@ -189,7 +189,7 @@ async function checkCourseCompletion(userId: string, courseId: string) {
 
 export async function markNotificationRead(id: string) {
   const session = await auth();
-  if (!session) return { error: "Not authenticated" };
+  if (!session) return { error: "No autenticado" };
 
   await prisma.notification.updateMany({
     where: { id, userId: session.user.id },
@@ -202,7 +202,7 @@ export async function markNotificationRead(id: string) {
 
 export async function markAllNotificationsRead() {
   const session = await auth();
-  if (!session) return { error: "Not authenticated" };
+  if (!session) return { error: "No autenticado" };
 
   await prisma.notification.updateMany({
     where: { userId: session.user.id, read: false },

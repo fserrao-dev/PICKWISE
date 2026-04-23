@@ -21,15 +21,15 @@ export default async function NotificationsPage() {
   return (
     <div className="space-y-6 max-w-3xl">
       <div>
-        <h1 className="text-3xl font-bold">Notifications</h1>
-        <p className="text-muted-foreground">Send messages to students</p>
+        <h1 className="text-3xl font-bold">Notificaciones</h1>
+        <p className="text-muted-foreground">Enviá mensajes a los estudiantes</p>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Send Notification</CardTitle>
+          <CardTitle>Enviar notificación</CardTitle>
           <CardDescription>
-            Send a message to a specific student or broadcast to all students.
+            Enviá un mensaje a un estudiante específico o a todos los estudiantes.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -39,14 +39,14 @@ export default async function NotificationsPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Recent Notifications</CardTitle>
-          <CardDescription>Last 30 notifications sent on the platform</CardDescription>
+          <CardTitle>Notificaciones recientes</CardTitle>
+          <CardDescription>Últimas 30 notificaciones enviadas en la plataforma</CardDescription>
         </CardHeader>
         <CardContent>
           {recentNotifs.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-10 text-muted-foreground">
               <Bell className="w-10 h-10 mb-2" />
-              <p>No notifications sent yet</p>
+              <p>Aún no se enviaron notificaciones</p>
             </div>
           ) : (
             <div className="space-y-2">
@@ -61,10 +61,10 @@ export default async function NotificationsPage() {
                   </div>
                   <div className="flex flex-col items-end gap-1 shrink-0">
                     <Badge variant={n.read ? "secondary" : "default"} className="text-xs">
-                      {n.read ? "Read" : "Unread"}
+                      {n.read ? "Leída" : "No leída"}
                     </Badge>
                     <span className="text-xs text-muted-foreground">
-                      {new Date(n.createdAt).toLocaleDateString()}
+                      {new Date(n.createdAt).toLocaleDateString("es")}
                     </span>
                   </div>
                 </div>

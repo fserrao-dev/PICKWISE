@@ -39,7 +39,7 @@ export function EnrollStudentDialog({ studentId, studentName, enrolledCourseIds,
     if (result.error) {
       toast.error(result.error);
     } else {
-      toast.success(`${studentName} enrolled successfully`);
+      toast.success(`${studentName} inscripto exitosamente`);
       setOpen(false);
       setSelectedCourseId("");
       router.refresh();
@@ -55,22 +55,22 @@ export function EnrollStudentDialog({ studentId, studentName, enrolledCourseIds,
         disabled={availableCourses.length === 0}
       >
         <UserPlus className="w-4 h-4" />
-        Enroll
+        Inscribir
       </Button>
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Enroll {studentName}</DialogTitle>
+            <DialogTitle>Inscribir a {studentName}</DialogTitle>
           </DialogHeader>
           <div className="space-y-3 py-2">
             {availableCourses.length === 0 ? (
               <p className="text-sm text-muted-foreground">
-                This student is already enrolled in all available courses.
+                Este estudiante ya está inscripto en todos los cursos disponibles.
               </p>
             ) : (
               <div className="space-y-2">
-                <p className="text-sm font-medium">Select a course:</p>
+                <p className="text-sm font-medium">Seleccioná un curso:</p>
                 {availableCourses.map((course) => (
                   <label
                     key={course.id}
@@ -95,12 +95,12 @@ export function EnrollStudentDialog({ studentId, studentName, enrolledCourseIds,
             )}
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
+            <Button variant="outline" onClick={() => setOpen(false)}>Cancelar</Button>
             <Button
               onClick={handleEnroll}
               disabled={!selectedCourseId || loading}
             >
-              {loading ? "Enrolling…" : "Enroll Student"}
+              {loading ? "Inscribiendo..." : "Inscribir estudiante"}
             </Button>
           </DialogFooter>
         </DialogContent>

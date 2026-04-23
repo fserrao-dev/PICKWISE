@@ -63,7 +63,6 @@ export default async function ProfilePage() {
 
   return (
     <div className="max-w-3xl space-y-6">
-      {/* Profile header */}
       <Card>
         <CardContent className="pt-6">
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
@@ -77,15 +76,15 @@ export default async function ProfilePage() {
               <h1 className="text-2xl font-bold">{user?.name}</h1>
               <p className="text-muted-foreground">{user?.email}</p>
               <p className="text-xs text-muted-foreground mt-0.5">
-                Member since {user?.createdAt ? formatDate(user.createdAt) : ""}
+                Miembro desde {user?.createdAt ? formatDate(user.createdAt) : ""}
               </p>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
               {[
-                { label: "Points", value: user?.points ?? 0, icon: "⭐" },
-                { label: "Rank", value: `#${rank}`, icon: "🏆" },
-                { label: "Courses", value: enrollments.length, icon: "📚" },
-                { label: "Avg Score", value: `${avgScore}%`, icon: "📊" },
+                { label: "Puntos", value: user?.points ?? 0, icon: "⭐" },
+                { label: "Ranking", value: `#${rank}`, icon: "🏆" },
+                { label: "Cursos", value: enrollments.length, icon: "📚" },
+                { label: "Promedio", value: `${avgScore}%`, icon: "📊" },
               ].map((s) => (
                 <div key={s.label} className="space-y-0.5">
                   <div className="text-xl">{s.icon}</div>
@@ -101,20 +100,19 @@ export default async function ProfilePage() {
       <Tabs defaultValue="courses">
         <TabsList className="w-full">
           <TabsTrigger value="courses" className="flex-1">
-            <BookOpen className="w-4 h-4 mr-1" /> Courses
+            <BookOpen className="w-4 h-4 mr-1" /> Cursos
           </TabsTrigger>
           <TabsTrigger value="badges" className="flex-1">
-            <Award className="w-4 h-4 mr-1" /> Badges
+            <Award className="w-4 h-4 mr-1" /> Insignias
           </TabsTrigger>
           <TabsTrigger value="history" className="flex-1">
-            <ClipboardList className="w-4 h-4 mr-1" /> Quiz History
+            <ClipboardList className="w-4 h-4 mr-1" /> Historial de quizzes
           </TabsTrigger>
         </TabsList>
 
-        {/* Courses tab */}
         <TabsContent value="courses" className="space-y-3 mt-4">
           {enrichedEnrollments.length === 0 ? (
-            <p className="text-center py-8 text-muted-foreground">No courses enrolled yet.</p>
+            <p className="text-center py-8 text-muted-foreground">Aún no estás inscripto en ningún curso.</p>
           ) : (
             enrichedEnrollments.map((e) => (
               <Card key={e.id}>
@@ -123,7 +121,7 @@ export default async function ProfilePage() {
                     <CardTitle className="text-sm">{e.course.title}</CardTitle>
                     <div className="flex items-center gap-2 shrink-0">
                       {e.completedAt && (
-                        <Badge variant="success" className="text-xs">✓ Completed</Badge>
+                        <Badge variant="success" className="text-xs">✓ Completado</Badge>
                       )}
                       {e.certificateUrl && (
                         <CertificateDownload
@@ -142,8 +140,8 @@ export default async function ProfilePage() {
                     </span>
                   </div>
                   <p className="text-xs text-muted-foreground mt-1">
-                    Enrolled {formatDate(e.enrolledAt)}
-                    {e.completedAt && ` · Completed ${formatDate(e.completedAt)}`}
+                    Inscripto el {formatDate(e.enrolledAt)}
+                    {e.completedAt && ` · Completado el ${formatDate(e.completedAt)}`}
                   </p>
                 </CardContent>
               </Card>
@@ -151,12 +149,11 @@ export default async function ProfilePage() {
           )}
         </TabsContent>
 
-        {/* Badges tab */}
         <TabsContent value="badges" className="mt-4">
           {user?.badges.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
               <Trophy className="w-12 h-12 mx-auto mb-3 opacity-40" />
-              <p>No badges earned yet. Complete lessons and quizzes to earn badges!</p>
+              <p>Aún no tenés insignias. ¡Completá lecciones y quizzes para ganarlas!</p>
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
@@ -174,10 +171,9 @@ export default async function ProfilePage() {
           )}
         </TabsContent>
 
-        {/* Quiz history tab */}
         <TabsContent value="history" className="mt-4">
           {attempts.length === 0 ? (
-            <p className="text-center py-8 text-muted-foreground">No quiz attempts yet.</p>
+            <p className="text-center py-8 text-muted-foreground">Aún no realizaste ningún quiz.</p>
           ) : (
             <Card>
               <CardContent className="p-0">

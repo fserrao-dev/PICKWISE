@@ -28,7 +28,7 @@ export default function NewCoursePage() {
     if (result.error) {
       toast.error(result.error);
     } else {
-      toast.success("Course created!");
+      toast.success("¡Curso creado!");
       router.push(`/admin/courses/${result.id}`);
     }
   }
@@ -42,38 +42,38 @@ export default function NewCoursePage() {
           </Button>
         </Link>
         <div>
-          <h1 className="text-3xl font-bold">New Course</h1>
-          <p className="text-muted-foreground">Create a new course for your students</p>
+          <h1 className="text-3xl font-bold">Nuevo curso</h1>
+          <p className="text-muted-foreground">Creá un nuevo curso para tus estudiantes</p>
         </div>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Course Details</CardTitle>
+          <CardTitle>Datos del curso</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="title">Course Title</Label>
-              <Input id="title" name="title" placeholder="e.g. Introduction to Web Development" required />
+              <Label htmlFor="title">Título del curso</Label>
+              <Input id="title" name="title" placeholder="ej. Introducción al Desarrollo Web" required />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="description">Description</Label>
+              <Label htmlFor="description">Descripción</Label>
               <Textarea
                 id="description"
                 name="description"
-                placeholder="Describe what students will learn in this course..."
+                placeholder="Describí qué van a aprender los estudiantes en este curso..."
                 rows={4}
                 required
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="coverImageUrl">Cover Image URL (optional)</Label>
+              <Label htmlFor="coverImageUrl">URL de imagen de portada (opcional)</Label>
               <Input
                 id="coverImageUrl"
                 name="coverImageUrl"
                 type="url"
-                placeholder="https://example.com/image.jpg"
+                placeholder="https://ejemplo.com/imagen.jpg"
               />
             </div>
             <div className="flex gap-3 pt-2">
@@ -81,14 +81,14 @@ export default function NewCoursePage() {
                 {loading ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    Creating...
+                    Creando...
                   </>
                 ) : (
-                  "Create Course"
+                  "Crear curso"
                 )}
               </Button>
               <Link href="/admin/courses">
-                <Button variant="outline">Cancel</Button>
+                <Button variant="outline">Cancelar</Button>
               </Link>
             </div>
           </form>

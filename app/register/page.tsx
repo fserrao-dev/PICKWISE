@@ -27,7 +27,7 @@ export default function RegisterPage() {
     if (result.error) {
       toast.error(result.error);
     } else {
-      toast.success("Account created! Please sign in.");
+      toast.success("¡Cuenta creada! Ahora podés iniciar sesión.");
       router.push("/login");
     }
   }
@@ -44,40 +44,40 @@ export default function RegisterPage() {
 
         <Card>
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl">Create an account</CardTitle>
-            <CardDescription>Join PICKWISE and start learning today</CardDescription>
+            <CardTitle className="text-2xl">Crear cuenta</CardTitle>
+            <CardDescription>Unite a PICKWISE y empezá a aprender hoy</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="name">Full Name</Label>
-                <Input id="name" name="name" placeholder="Jane Smith" required />
+                <Label htmlFor="name">Nombre completo</Label>
+                <Input id="name" name="name" placeholder="Juan Pérez" required />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input id="email" name="email" type="email" placeholder="you@example.com" required />
+                <Label htmlFor="email">Correo electrónico</Label>
+                <Input id="email" name="email" type="email" placeholder="tu@correo.com" required />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <Input id="password" name="password" type="password" placeholder="Min 8 chars, 1 uppercase, 1 number" required />
+                <Label htmlFor="password">Contraseña</Label>
+                <Input id="password" name="password" type="password" placeholder="Mín. 8 caracteres, 1 mayúscula, 1 número" required />
               </div>
               <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    Creating account...
+                    Creando cuenta...
                   </>
                 ) : (
-                  "Create Account"
+                  "Crear cuenta"
                 )}
               </Button>
             </form>
           </CardContent>
           <CardFooter className="justify-center">
             <p className="text-sm text-muted-foreground">
-              Already have an account?{" "}
+              ¿Ya tenés cuenta?{" "}
               <Link href="/login" className="text-primary hover:underline font-medium">
-                Sign in
+                Iniciar sesión
               </Link>
             </p>
           </CardFooter>

@@ -48,7 +48,6 @@ export default async function AdminDashboard() {
       : 0;
 
   const courseCompletionData = courseStats.map((course) => {
-    const totalLessons = course.modules.flatMap((m) => m.lessons).length;
     const completed = course.enrollments.filter((e) => e.completedAt).length;
     const enrolled = course.enrollments.length;
     return {
@@ -59,17 +58,17 @@ export default async function AdminDashboard() {
   });
 
   const stats = [
-    { title: "Active Students", value: totalStudents, icon: Users, color: "text-blue-600" },
-    { title: "Published Courses", value: publishedCourses, icon: GraduationCap, color: "text-green-600" },
-    { title: "Quiz Attempts", value: totalAttempts, icon: BookOpen, color: "text-purple-600" },
-    { title: "Avg Quiz Score", value: `${avgScore}%`, icon: TrendingUp, color: "text-orange-600" },
+    { title: "Estudiantes activos", value: totalStudents, icon: Users, color: "text-blue-600" },
+    { title: "Cursos publicados", value: publishedCourses, icon: GraduationCap, color: "text-green-600" },
+    { title: "Intentos de quiz", value: totalAttempts, icon: BookOpen, color: "text-purple-600" },
+    { title: "Puntaje promedio", value: `${avgScore}%`, icon: TrendingUp, color: "text-orange-600" },
   ];
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold">Dashboard</h1>
-        <p className="text-muted-foreground">Platform overview and analytics</p>
+        <h1 className="text-3xl font-bold">Panel</h1>
+        <p className="text-muted-foreground">Resumen y analíticas de la plataforma</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -98,23 +97,23 @@ export default async function AdminDashboard() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Recent Quiz Attempts</CardTitle>
-          <CardDescription>Last 20 quiz submissions across the platform</CardDescription>
+          <CardTitle>Intentos de quiz recientes</CardTitle>
+          <CardDescription>Últimos 20 envíos de quiz en la plataforma</CardDescription>
         </CardHeader>
         <CardContent>
           {recentAttempts.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
-              No quiz attempts yet
+              Aún no hay intentos de quiz
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b">
-                    <th className="text-left pb-2 font-medium">Student</th>
-                    <th className="text-left pb-2 font-medium">Lesson</th>
-                    <th className="text-left pb-2 font-medium">Score</th>
-                    <th className="text-left pb-2 font-medium">Date</th>
+                    <th className="text-left pb-2 font-medium">Estudiante</th>
+                    <th className="text-left pb-2 font-medium">Lección</th>
+                    <th className="text-left pb-2 font-medium">Puntaje</th>
+                    <th className="text-left pb-2 font-medium">Fecha</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y">
@@ -135,7 +134,7 @@ export default async function AdminDashboard() {
                         </span>
                       </td>
                       <td className="py-2 text-muted-foreground">
-                        {new Date(attempt.attemptedAt).toLocaleDateString()}
+                        {new Date(attempt.attemptedAt).toLocaleDateString("es")}
                       </td>
                     </tr>
                   ))}

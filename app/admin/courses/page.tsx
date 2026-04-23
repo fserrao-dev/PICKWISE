@@ -19,13 +19,13 @@ export default async function AdminCoursesPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Courses</h1>
-          <p className="text-muted-foreground">Manage your course catalog</p>
+          <h1 className="text-3xl font-bold">Cursos</h1>
+          <p className="text-muted-foreground">Administrá el catálogo de cursos</p>
         </div>
         <Link href="/admin/courses/new">
           <Button>
             <Plus className="w-4 h-4" />
-            New Course
+            Nuevo curso
           </Button>
         </Link>
       </div>
@@ -33,12 +33,12 @@ export default async function AdminCoursesPage() {
       {courses.length === 0 ? (
         <div className="text-center py-16">
           <BookOpen className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-          <h3 className="text-lg font-medium mb-2">No courses yet</h3>
-          <p className="text-muted-foreground mb-4">Create your first course to get started</p>
+          <h3 className="text-lg font-medium mb-2">Aún no hay cursos</h3>
+          <p className="text-muted-foreground mb-4">Creá tu primer curso para comenzar</p>
           <Link href="/admin/courses/new">
             <Button>
               <Plus className="w-4 h-4" />
-              Create Course
+              Crear curso
             </Button>
           </Link>
         </div>
@@ -54,7 +54,7 @@ export default async function AdminCoursesPage() {
                       <div className="flex items-center gap-2 mb-1">
                         <CardTitle className="text-lg truncate">{course.title}</CardTitle>
                         <Badge variant={course.isPublished ? "success" : "secondary"}>
-                          {course.isPublished ? "Published" : "Draft"}
+                          {course.isPublished ? "Publicado" : "Borrador"}
                         </Badge>
                       </div>
                       <CardDescription className="line-clamp-2">{course.description}</CardDescription>
@@ -63,7 +63,7 @@ export default async function AdminCoursesPage() {
                       <Link href={`/admin/courses/${course.id}`}>
                         <Button variant="outline" size="sm">
                           <Eye className="w-4 h-4" />
-                          Manage
+                          Gestionar
                         </Button>
                       </Link>
                       <CourseActions
@@ -78,11 +78,11 @@ export default async function AdminCoursesPage() {
                   <div className="flex items-center gap-6 text-sm text-muted-foreground">
                     <span className="flex items-center gap-1">
                       <BookOpen className="w-4 h-4" />
-                      {course.modules.length} modules · {totalLessons} lessons
+                      {course.modules.length} módulos · {totalLessons} lecciones
                     </span>
                     <span className="flex items-center gap-1">
                       <Users className="w-4 h-4" />
-                      {course._count.enrollments} enrolled
+                      {course._count.enrollments} inscriptos
                     </span>
                   </div>
                 </CardContent>
