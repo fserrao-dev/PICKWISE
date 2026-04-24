@@ -48,7 +48,7 @@ export default async function LessonPage({ params }: Props) {
         </div>
       )}
 
-      <LessonEditor lesson={lesson} courseId={lesson.module.courseId} />
+      <LessonEditor lesson={lesson as any} courseId={lesson.module.courseId} />
 
       {videoId && (
         <div className="aspect-video rounded-lg overflow-hidden bg-black">

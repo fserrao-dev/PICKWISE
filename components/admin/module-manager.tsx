@@ -253,7 +253,7 @@ export function ModuleManager({ courseId, modules }: ModuleManagerProps) {
                               {/* Materials preview */}
                               {matCount > 0 && (
                                 <div className="mt-1.5 pl-6 flex flex-wrap gap-1.5">
-                                  {lesson.materials!.map((mat, mi) => (
+                                  {(lesson.materials as { name: string; url: string }[]).map((mat, mi) => (
                                     <a
                                       key={mi}
                                       href={mat.url}
