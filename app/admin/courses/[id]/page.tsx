@@ -21,7 +21,9 @@ export default async function CourseDetailPage({ params }: Props) {
         include: {
           lessons: {
             orderBy: { order: "asc" },
-            include: { _count: { select: { questions: true } } },
+            include: {
+              _count: { select: { questions: true } },
+            },
           },
         },
       },

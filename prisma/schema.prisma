@@ -55,6 +55,7 @@ model Lesson {
   title        String
   youtubeUrl   String
   description  String?
+  materials    Json?
   order        Int
   createdAt    DateTime         @default(now())
   module       Module           @relation(fields: [moduleId], references: [id], onDelete: Cascade)

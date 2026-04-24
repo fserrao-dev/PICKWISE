@@ -104,6 +104,59 @@ export async function createModule(courseId: string, formData: FormData) {
   return { success: true };
 }
 
+export async function createModuleWithContent(
+  courseId: string,
+  data: {
+    title: string;
+    description?: string;
+    youtubeUrl: string;
+    materials: { name: string; url: string }[];
+    questions: { text: string; options: string[]; correctIndex: number; explanation?: string }[];
+  }
+) {
+  await requireAdmin();
+
+  if (!data.title || data.title.length < 2) return { error: "El título del módulo es obligatorio" };
+
+  const videoId = extractYoutubeId(data.youtubeUrl);
+  if (!videoId) return { error: "URL de YouTube inválida" };
+
+  const lastModule = await prisma.module.findFirst({
+    where: { courseId },
+    orderBy: { order: "desc" },
+  });
+
+  const module_ = await prisma.module.create({
+    data: { courseId, title: data.title, order: (lastModule?.order ?? 0) + 1 },
+  });
+
+  const lesson = await prisma.lesson.create({
+    data: {
+      moduleId: module_.id,
+      title: data.title,
+      youtubeUrl: `https://www.youtube.com/watch?v=${videoId}`,
+      description: data.description || null,
+      materials: data.materials.length > 0 ? data.materials : [],
+      order: 1,
+    },
+  });
+
+  if (data.questions.length > 0) {
+    await prisma.question.createMany({
+      data: data.questions.map((q) => ({
+        lessonId: lesson.id,
+        text: q.text,
+        options: q.options,
+        correctIndex: q.correctIndex,
+        explanation: q.explanation || null,
+      })),
+    });
+  }
+
+  revalidatePath(`/admin/courses/${courseId}`);
+  return { success: true };
+}
+
 export async function updateModule(id: string, courseId: string, formData: FormData) {
   await requireAdmin();
 
@@ -127,6 +180,7 @@ const lessonSchema = z.object({
   title: z.string().min(3, "El título debe tener al menos 3 caracteres"),
   youtubeUrl: z.string().min(1, "La URL de YouTube es obligatoria"),
   description: z.string().optional(),
+  materials: z.array(z.object({ name: z.string(), url: z.string() })).optional(),
 });
 
 export async function createLesson(moduleId: string, formData: FormData) {
@@ -166,7 +220,11 @@ export async function createLesson(moduleId: string, formData: FormData) {
   return { success: true, id: lesson.id };
 }
 
-export async function updateLesson(id: string, formData: FormData) {
+export async function updateLesson(
+  id: string,
+  formData: FormData,
+  materials?: { name: string; url: string }[]
+) {
   await requireAdmin();
 
   const raw = {
@@ -187,6 +245,7 @@ export async function updateLesson(id: string, formData: FormData) {
       title: result.data.title,
       youtubeUrl: `https://www.youtube.com/watch?v=${videoId}`,
       description: result.data.description || null,
+      ...(materials !== undefined && { materials: materials }),
     },
   });
 

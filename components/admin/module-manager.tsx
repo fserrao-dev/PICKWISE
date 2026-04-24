@@ -4,26 +4,31 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { createModule, deleteModule, createLesson, deleteLesson, reorderModule, reorderLesson } from "@/app/actions/courses";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { deleteModule, deleteLesson, reorderModule, reorderLesson } from "@/app/actions/courses";
+import { CreateModuleDialog } from "@/components/admin/create-module-dialog";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
-import { Plus, Trash2, ChevronDown, ChevronUp, BookOpen, FileQuestion, ArrowUp, ArrowDown } from "lucide-react";
-import { Textarea } from "@/components/ui/textarea";
+  Plus,
+  Trash2,
+  ChevronDown,
+  ChevronUp,
+  BookOpen,
+  FileQuestion,
+  ArrowUp,
+  ArrowDown,
+  Paperclip,
+  Video,
+} from "lucide-react";
 
 interface Lesson {
   id: string;
   title: string;
   order: number;
+  youtubeUrl: string;
+  description: string | null;
+  materials: { name: string; url: string }[] | null;
   _count: { questions: number };
 }
 
@@ -41,46 +46,13 @@ interface ModuleManagerProps {
 
 export function ModuleManager({ courseId, modules }: ModuleManagerProps) {
   const router = useRouter();
-  const [addModuleOpen, setAddModuleOpen] = useState(false);
-  const [addLessonModuleId, setAddLessonModuleId] = useState<string | null>(null);
-  const [expandedModules, setExpandedModules] = useState<Set<string>>(new Set(modules.map((m) => m.id)));
-  const [loading, setLoading] = useState(false);
-
-  async function handleAddModule(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setLoading(true);
-    const formData = new FormData(e.currentTarget);
-    const result = await createModule(courseId, formData);
-    setLoading(false);
-
-    if (result.error) {
-      toast.error(result.error);
-    } else {
-      toast.success("Módulo agregado");
-      setAddModuleOpen(false);
-      router.refresh();
-    }
-  }
-
-  async function handleAddLesson(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    if (!addLessonModuleId) return;
-    setLoading(true);
-    const formData = new FormData(e.currentTarget);
-    const result = await createLesson(addLessonModuleId, formData);
-    setLoading(false);
-
-    if (result.error) {
-      toast.error(result.error);
-    } else {
-      toast.success("Lección agregada");
-      setAddLessonModuleId(null);
-      router.refresh();
-    }
-  }
+  const [createOpen, setCreateOpen] = useState(false);
+  const [expandedModules, setExpandedModules] = useState<Set<string>>(
+    new Set(modules.map((m) => m.id))
+  );
 
   async function handleDeleteModule(moduleId: string) {
-    if (!confirm("¿Eliminar este módulo y todas sus lecciones?")) return;
+    if (!confirm("¿Eliminar este módulo y todo su contenido?")) return;
     const result = await deleteModule(moduleId, courseId);
     if (result.success) {
       toast.success("Módulo eliminado");
@@ -121,8 +93,8 @@ export function ModuleManager({ courseId, modules }: ModuleManagerProps) {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold">Módulos y lecciones</h2>
-        <Button onClick={() => setAddModuleOpen(true)}>
+        <h2 className="text-xl font-semibold">Módulos</h2>
+        <Button onClick={() => setCreateOpen(true)}>
           <Plus className="w-4 h-4" />
           Agregar módulo
         </Button>
@@ -132,7 +104,9 @@ export function ModuleManager({ courseId, modules }: ModuleManagerProps) {
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
             <BookOpen className="w-10 h-10 text-muted-foreground mb-3" />
-            <p className="text-muted-foreground">Aún no hay módulos. Agregá el primero para comenzar.</p>
+            <p className="text-muted-foreground text-sm">
+              Aún no hay módulos. Hacé clic en "Agregar módulo" para comenzar.
+            </p>
           </CardContent>
         </Card>
       ) : (
@@ -147,7 +121,7 @@ export function ModuleManager({ courseId, modules }: ModuleManagerProps) {
                 <CardHeader className="py-3">
                   <div className="flex items-center justify-between gap-2">
                     <button
-                      className="flex items-center gap-2 flex-1 text-left"
+                      className="flex items-center gap-2 flex-1 text-left min-w-0"
                       onClick={() => toggleModule(module.id)}
                     >
                       {expanded ? (
@@ -155,12 +129,13 @@ export function ModuleManager({ courseId, modules }: ModuleManagerProps) {
                       ) : (
                         <ChevronDown className="h-4 w-4 text-muted-foreground shrink-0" />
                       )}
-                      <span className="font-medium">{module.title}</span>
-                      <Badge variant="secondary" className="text-xs">
-                        {module.lessons.length} lecciones
+                      <span className="font-medium truncate">{module.title}</span>
+                      <Badge variant="secondary" className="text-xs shrink-0">
+                        {module.lessons.length}{" "}
+                        {module.lessons.length === 1 ? "lección" : "lecciones"}
                       </Badge>
                     </button>
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1 shrink-0">
                       <Button
                         size="icon"
                         variant="ghost"
@@ -182,19 +157,11 @@ export function ModuleManager({ courseId, modules }: ModuleManagerProps) {
                         <ArrowDown className="h-3.5 w-3.5" />
                       </Button>
                       <Button
-                        size="sm"
-                        variant="outline"
-                        className="ml-1"
-                        onClick={() => setAddLessonModuleId(module.id)}
-                      >
-                        <Plus className="w-3 h-3" />
-                        Lección
-                      </Button>
-                      <Button
                         size="icon"
                         variant="ghost"
-                        className="text-destructive hover:text-destructive h-8 w-8"
+                        className="h-8 w-8 text-destructive hover:text-destructive ml-1"
                         onClick={() => handleDeleteModule(module.id)}
+                        title="Eliminar módulo"
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
@@ -202,65 +169,109 @@ export function ModuleManager({ courseId, modules }: ModuleManagerProps) {
                   </div>
                 </CardHeader>
 
-                {expanded && module.lessons.length > 0 && (
+                {expanded && (
                   <CardContent className="pt-0">
-                    <div className="space-y-2 pl-6 border-l-2 border-muted ml-2">
-                      {module.lessons.map((lesson, li) => {
-                        const lessonFirst = li === 0;
-                        const lessonLast = li === module.lessons.length - 1;
-                        return (
-                          <div
-                            key={lesson.id}
-                            className="flex items-center justify-between gap-2 py-1"
-                          >
-                            <div className="flex items-center gap-2 min-w-0">
-                              <BookOpen className="h-4 w-4 text-muted-foreground shrink-0" />
-                              <span className="text-sm truncate">{lesson.title}</span>
+                    {module.lessons.length === 0 ? (
+                      <p className="text-sm text-muted-foreground pl-6 py-2">
+                        Este módulo no tiene lecciones aún.
+                      </p>
+                    ) : (
+                      <div className="space-y-3 pl-6 border-l-2 border-muted ml-2">
+                        {module.lessons.map((lesson, li) => {
+                          const lessonFirst = li === 0;
+                          const lessonLast = li === module.lessons.length - 1;
+                          const matCount = lesson.materials?.length ?? 0;
+
+                          return (
+                            <div key={lesson.id} className="pt-2">
+                              {/* Lesson header row */}
+                              <div className="flex items-center justify-between gap-2">
+                                <div className="flex items-center gap-2 min-w-0">
+                                  <BookOpen className="h-4 w-4 text-muted-foreground shrink-0" />
+                                  <span className="text-sm font-medium truncate">
+                                    {lesson.title}
+                                  </span>
+                                </div>
+                                <div className="flex items-center gap-1 shrink-0">
+                                  {/* stats */}
+                                  <span className="text-xs text-muted-foreground flex items-center gap-1">
+                                    <Video className="h-3 w-3" />
+                                    Video
+                                  </span>
+                                  {matCount > 0 && (
+                                    <span className="text-xs text-muted-foreground flex items-center gap-1 ml-1">
+                                      <Paperclip className="h-3 w-3" />
+                                      {matCount}
+                                    </span>
+                                  )}
+                                  <span className="text-xs text-muted-foreground flex items-center gap-1 ml-1">
+                                    <FileQuestion className="h-3 w-3" />
+                                    {lesson._count.questions}P
+                                  </span>
+                                  {/* reorder */}
+                                  <Button
+                                    size="icon"
+                                    variant="ghost"
+                                    className="h-6 w-6 ml-1"
+                                    disabled={lessonFirst}
+                                    onClick={() =>
+                                      handleReorderLesson(lesson.id, module.id, "up")
+                                    }
+                                    title="Mover arriba"
+                                  >
+                                    <ArrowUp className="h-3 w-3" />
+                                  </Button>
+                                  <Button
+                                    size="icon"
+                                    variant="ghost"
+                                    className="h-6 w-6"
+                                    disabled={lessonLast}
+                                    onClick={() =>
+                                      handleReorderLesson(lesson.id, module.id, "down")
+                                    }
+                                    title="Mover abajo"
+                                  >
+                                    <ArrowDown className="h-3 w-3" />
+                                  </Button>
+                                  <Link href={`/admin/lessons/${lesson.id}`}>
+                                    <Button size="sm" variant="ghost" className="h-7 text-xs">
+                                      Editar
+                                    </Button>
+                                  </Link>
+                                  <Button
+                                    size="icon"
+                                    variant="ghost"
+                                    className="h-7 w-7 text-destructive hover:text-destructive"
+                                    onClick={() => handleDeleteLesson(lesson.id)}
+                                    title="Eliminar lección"
+                                  >
+                                    <Trash2 className="h-3.5 w-3.5" />
+                                  </Button>
+                                </div>
+                              </div>
+
+                              {/* Materials preview */}
+                              {matCount > 0 && (
+                                <div className="mt-1.5 pl-6 flex flex-wrap gap-1.5">
+                                  {lesson.materials!.map((mat, mi) => (
+                                    <a
+                                      key={mi}
+                                      href={mat.url}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="inline-flex items-center gap-1 text-xs text-primary hover:underline bg-primary/5 px-2 py-0.5 rounded-full border border-primary/20"
+                                    >
+                                      <Paperclip className="h-2.5 w-2.5" />
+                                      {mat.name}
+                                    </a>
+                                  ))}
+                                </div>
+                              )}
                             </div>
-                            <div className="flex items-center gap-1 shrink-0">
-                              <span className="text-xs text-muted-foreground flex items-center gap-1 mr-1">
-                                <FileQuestion className="h-3 w-3" />
-                                {lesson._count.questions} P
-                              </span>
-                              <Button
-                                size="icon"
-                                variant="ghost"
-                                className="h-6 w-6"
-                                disabled={lessonFirst}
-                                onClick={() => handleReorderLesson(lesson.id, module.id, "up")}
-                                title="Mover arriba"
-                              >
-                                <ArrowUp className="h-3 w-3" />
-                              </Button>
-                              <Button
-                                size="icon"
-                                variant="ghost"
-                                className="h-6 w-6"
-                                disabled={lessonLast}
-                                onClick={() => handleReorderLesson(lesson.id, module.id, "down")}
-                                title="Mover abajo"
-                              >
-                                <ArrowDown className="h-3 w-3" />
-                              </Button>
-                              <Link href={`/admin/lessons/${lesson.id}`}>
-                                <Button size="sm" variant="ghost" className="h-7 text-xs">
-                                  Editar
-                                </Button>
-                              </Link>
-                              <Button
-                                size="icon"
-                                variant="ghost"
-                                className="h-7 w-7 text-destructive hover:text-destructive"
-                                onClick={() => handleDeleteLesson(lesson.id)}
-                                title="Eliminar lección"
-                              >
-                                <Trash2 className="h-3.5 w-3.5" />
-                              </Button>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
+                          );
+                        })}
+                      </div>
+                    )}
                   </CardContent>
                 )}
               </Card>
@@ -269,62 +280,11 @@ export function ModuleManager({ courseId, modules }: ModuleManagerProps) {
         </div>
       )}
 
-      <Dialog open={addModuleOpen} onOpenChange={setAddModuleOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Agregar módulo</DialogTitle>
-          </DialogHeader>
-          <form onSubmit={handleAddModule} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="title">Título del módulo</Label>
-              <Input id="title" name="title" placeholder="ej. Introducción" required />
-            </div>
-            <DialogFooter>
-              <Button type="button" variant="outline" onClick={() => setAddModuleOpen(false)}>
-                Cancelar
-              </Button>
-              <Button type="submit" disabled={loading}>
-                {loading ? "Agregando..." : "Agregar módulo"}
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
-
-      <Dialog open={!!addLessonModuleId} onOpenChange={() => setAddLessonModuleId(null)}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Agregar lección</DialogTitle>
-          </DialogHeader>
-          <form onSubmit={handleAddLesson} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="lessonTitle">Título de la lección</Label>
-              <Input id="lessonTitle" name="title" placeholder="ej. Introducción a las Variables" required />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="youtubeUrl">URL de YouTube</Label>
-              <Input
-                id="youtubeUrl"
-                name="youtubeUrl"
-                placeholder="https://www.youtube.com/watch?v=... o youtu.be/..."
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="lessonDesc">Descripción (opcional)</Label>
-              <Textarea id="lessonDesc" name="description" placeholder="Descripción breve..." rows={2} />
-            </div>
-            <DialogFooter>
-              <Button type="button" variant="outline" onClick={() => setAddLessonModuleId(null)}>
-                Cancelar
-              </Button>
-              <Button type="submit" disabled={loading}>
-                {loading ? "Agregando..." : "Agregar lección"}
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
+      <CreateModuleDialog
+        courseId={courseId}
+        open={createOpen}
+        onClose={() => setCreateOpen(false)}
+      />
     </div>
   );
 }

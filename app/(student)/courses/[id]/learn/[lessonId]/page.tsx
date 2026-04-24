@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, ArrowRight, CheckCircle2, Lock } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle2, Lock, Paperclip } from "lucide-react";
 import { LessonPlayer } from "@/components/student/lesson-player";
 import { extractYoutubeId } from "@/lib/utils";
 
@@ -113,6 +113,29 @@ export default async function LearnPage({ params }: Props) {
       {lesson.description && (
         <div className="prose prose-sm max-w-none text-muted-foreground bg-muted/40 rounded-lg p-4">
           {lesson.description}
+        </div>
+      )}
+
+      {Array.isArray(lesson.materials) && (lesson.materials as any[]).length > 0 && (
+        <div className="bg-muted/40 rounded-lg p-4 space-y-2">
+          <div className="flex items-center gap-2 text-sm font-medium">
+            <Paperclip className="w-4 h-4 text-muted-foreground" />
+            Material adjunto
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {(lesson.materials as { name: string; url: string }[]).map((mat, i) => (
+              <a
+                key={i}
+                href={mat.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline bg-background border border-border px-3 py-1.5 rounded-full"
+              >
+                <Paperclip className="w-3 h-3" />
+                {mat.name}
+              </a>
+            ))}
+          </div>
         </div>
       )}
 
